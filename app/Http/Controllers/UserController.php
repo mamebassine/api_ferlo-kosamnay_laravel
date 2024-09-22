@@ -108,4 +108,33 @@ class UserController extends Controller
         // Renvoyer le nouveau token en réponse JSON
         return response()->json(compact('token'));
     }
+
+
+    public function addRepresentant(Request $request)
+{
+    // Validation des données de la requête
+    $validator = Validator::make($request->all(), [
+        'nom_complet' => 'required|string|max:255',
+        'telephone' => 'required|string|max:15',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:6|confirmed',
+    ]);
+
+    // Vérifier si la validation échoue
+    if ($validator->fails()) {
+        return response()->json($validator->errors(), 400);
+    }
+
+    // Création du représentant
+    $representant = User::create([
+        'nom_complet' => $request->nom_complet,
+        'telephone' => $request->telephone,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'role' => 'representant',  // Assurer que le rôle est 'representant'
+    ]);
+
+    // Renvoyer le représentant créé en réponse
+    return response()->json($representant, 201);
+}
 }
