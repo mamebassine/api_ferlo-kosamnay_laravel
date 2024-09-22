@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('produits', function (Blueprint $table) {
             $table->id();
             $table->string('image')->nullable(); // Image du produit (chemin d'accès)
+            $table->string('nom'); 
             $table->text('description')->nullable(); // Description du produit
             $table->decimal('prix', 8, 2); // Prix du produit avec deux décimales
             $table->integer('quantite'); // Quantité disponible en stock

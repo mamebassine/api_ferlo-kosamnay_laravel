@@ -11,15 +11,17 @@ class Produit extends Model
 
     protected $fillable = [
         'image',
+        'nom',
         'description',
         'prix',
         'quantite',
         'categorie_id',
     ];
 
-    public function category()
+    public function categorie()
     {
         return $this->belongsTo(Categorie::class);
+        
     }
 
     public function lignesCommandes()
