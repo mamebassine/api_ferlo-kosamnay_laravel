@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\BoutiqueController;
 
 // // Route pour obtenir les informations de l'utilisateur connecté
 // Route::get('/user', function (Request $request) {
@@ -40,6 +41,8 @@ Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 Route::apiResource('categories', CategorieController::class);
 // Routes pour les produits
 Route::apiResource('produits', ProduitController::class);
-// Routes pour les commandes
+// Routes pour les boutiques
+Route::apiResource('boutiques', BoutiqueController::class);
+
 
 
