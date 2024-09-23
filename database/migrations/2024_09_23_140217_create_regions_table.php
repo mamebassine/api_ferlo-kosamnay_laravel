@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('regions', function (Blueprint $table) {
-            $table->id();
-            $table->string('nom'); // Nom de la région
-            $table->timestamps();
-        });
+        // Crée la table "regions" avec les colonnes id et nom
+    Schema::create('regions', function (Blueprint $table) {
+        $table->id();  // Clé primaire
+        $table->string('nom');  // Nom de la région
+        $table->timestamps();  // Colonnes de date
+    });
     }
 
     /**

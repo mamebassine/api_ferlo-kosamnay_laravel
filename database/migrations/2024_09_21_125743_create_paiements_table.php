@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('paiements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('commande_id')->constrained('commandes')->onDelete('cascade'); // Lien vers la commande
-            $table->decimal('montant', 10, 2); // Montant du paiement
-            $table->date('date'); // Date du paiement
-            $table->enum('type', ['espece', 'wallet']); // Type de paiement
+            $table->foreignId('ligne_commande_id')->constrained('ligne_commandes');
+            $table->decimal('montant', 8, 2);
+            $table->date('date');
+            $table->enum('type', ['espece', 'wallet']);
             $table->timestamps();
         });
     }

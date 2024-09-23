@@ -9,20 +9,33 @@ class LigneCommande extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'produit_id',
-        'commande_id',
-        'quantite_totale',
-        'prix_total',
-    ];
+    // Les champs qui peuvent être remplis en masse
+    protected $fillable = ['produit_id', 'user_id', 'date', 'statut', 'quantite_totale', 'prix_total'];
 
-    public function produit()
+    /**
+     * Relation avec le modèle User.
+     * Une commande est passée par un utilisateur.
+     */
+    public function user()
     {
-        return $this->belongsTo(Produit::class);
+        return $this->belongsTo(User::class); // belongsTo: Une commande appartient à un utilisateur.
     }
 
-    public function commande()
+    /**
+     * Relation avec le modèle Produit.
+     * Une commande contient un produit.
+     */
+    public function produit()
     {
-        return $this->belongsTo(Commande::class);
+        return $this->belongsTo(Produit::class); // belongsTo: Chaque commande contient un produit.
+    }
+
+    /**
+     * Relation avec le modèle Paiement.
+     * Une commande peut avoir un paiement associé.
+     */
+    public function paiement()
+    {
+        return $this->hasOne(Paiement::class); // hasOne: Une commande peut avoir un seul paiement.
     }
 }

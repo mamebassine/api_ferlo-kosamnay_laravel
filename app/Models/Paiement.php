@@ -9,15 +9,15 @@ class Paiement extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'commande_id',
-        'montant',
-        'date',
-        'type',
-    ];
+    // Les champs qui peuvent être remplis en masse
+    protected $fillable = ['ligne_commande_id', 'montant', 'date', 'type'];
 
+    /**
+     * Relation avec le modèle LigneCommande.
+     * Un paiement est lié à une commande.
+     */
     public function commande()
     {
-        return $this->belongsTo(Commande::class);
+        return $this->belongsTo(LigneCommande::class, 'ligne_commande_id'); // belongsTo: Un paiement est lié à une commande.
     }
 }

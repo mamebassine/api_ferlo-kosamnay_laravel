@@ -14,10 +14,11 @@ return new class extends Migration
         // Création de la table 'categories'
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('nom_complet'); // Nom complet de la catégorie
-            $table->text('description')->nullable(); // Description de la catégorie
+            $table->string('nom_complet');
+            $table->text('description');
             $table->timestamps();
         });
+    
     }
 
     /**

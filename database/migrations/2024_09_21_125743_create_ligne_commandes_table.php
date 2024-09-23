@@ -12,12 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ligne_commandes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('produit_id')->constrained('produits')->onDelete('cascade'); // Lien vers le produit
-            $table->foreignId('commande_id')->constrained('commandes')->onDelete('cascade'); // Lien vers la commande
-            $table->integer('quantite_totale'); // Quantité totale de ce produit dans la commande
-            $table->decimal('prix_total', 10, 2); // Prix total pour cette ligne de commande
-            $table->timestamps();
+            $table->id();  // Clé primaire
+            $table->foreignId('produit_id')->constrained('produits');  // Clé étrangère vers la table "produits"
+            $table->foreignId('user_id')->constrained('users');  // Clé étrangère vers la table "users"
+            $table->date('date');  // Date de la commande
+            $table->enum('statut', ['en attente', 'livré', 'en cours de traitement', 'annulé']);  // Statut de la commande
+            $table->integer('quantite_totale');  // Quantité totale commandée
+            $table->decimal('prix_totale', 8, 2);  // Prix total de la commande
+            $table->timestamps();  // Colonnes de date
         });
     }
 

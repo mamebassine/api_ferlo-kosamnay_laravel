@@ -9,14 +9,15 @@ class Categorie extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'nom_complet',
-        'description',
-    ];
+    // Les champs qui peuvent être remplis en masse (via $fillable)
+    protected $fillable = ['nom_complet', 'description'];
 
+    /**
+     * Relation avec le modèle Produit.
+     * Une catégorie peut avoir plusieurs produits.
+     */
     public function produits()
     {
-        return $this->hasMany(Produit::class);
-        
+        return $this->hasMany(Produit::class); // hasMany: Une catégorie possède plusieurs produits.
     }
 }

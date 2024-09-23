@@ -2,8 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\JwtMiddleware; // Assurez-vous d'importer votre nouveau middleware
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use Tymon\JWTAuth\Http\Middleware\Authenticate as JWTAuthenticate;
 
 class Kernel extends HttpKernel
 {
@@ -13,7 +13,8 @@ class Kernel extends HttpKernel
 
     protected $routeMiddleware = [
         // Middleware spécifiques aux routes
-        'auth' => JWTAuthenticate::class, // Renommez si nécessaire
+        'jwt.auth' => JwtMiddleware::class, // Remplacez par votre middleware
         // Autres middlewares
     ];
 }
+

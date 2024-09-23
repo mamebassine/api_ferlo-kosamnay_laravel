@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Création de la table 'produits'
-        Schema::create('produits', function (Blueprint $table) {
-            $table->id();
-            $table->string('image')->nullable(); // Image du produit (chemin d'accès)
-            $table->string('nom'); 
-            $table->text('description')->nullable(); // Description du produit
-            $table->decimal('prix', 8, 2); // Prix du produit avec deux décimales
-            $table->integer('quantite'); // Quantité disponible en stock
-            $table->foreignId('categorie_id')->constrained('categories')->onDelete('cascade'); // Clé étrangère vers 'categories'
-            $table->timestamps();
-        });
+        // Crée la table "produits" avec les colonnes id, image, description, etc.
+    Schema::create('produits', function (Blueprint $table) {
+        $table->id();  // Clé primaire
+        $table->foreignId('categorie_id')->constrained('categories');  // Clé étrangère vers la table "categories"
+        $table->string('image');  // Colonne pour stocker l'image du produit
+        $table->text('description');  // Colonne pour la description du produit
+        $table->decimal('prix', 8, 2);  // Colonne pour le prix du produit, format décimal
+        $table->integer('quantite');  // Colonne pour stocker la quantité disponible
+        $table->string('reference')->unique();  // Référence unique du produit
+        $table->timestamps();  // Colonnes de date
+    });
+
     }
 
     /**

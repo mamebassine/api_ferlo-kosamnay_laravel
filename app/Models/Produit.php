@@ -9,23 +9,26 @@ class Produit extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'image',
-        'nom',
-        'description',
-        'prix',
-        'quantite',
-        'categorie_id',
-    ];
+    // Les champs qui peuvent être remplis en masse
+    protected $fillable = ['categorie_id', 'image', 'description', 'prix', 'quantite', 'reference'];
 
+    /**
+     * Relation avec le modèle Categorie.
+     * Un produit appartient à une catégorie.
+     */
     public function categorie()
     {
-        return $this->belongsTo(Categorie::class);
-        
+        return $this->belongsTo(Categorie::class); // belongsTo: Chaque produit appartient à une catégorie.
     }
 
-    public function lignesCommandes()
+    /**
+     * Relation avec le modèle Boutique.
+     * Un produit peut être disponible dans plusieurs boutiques.
+     */
+    public function boutiques()
     {
-        return $this->hasMany(LigneCommande::class);
+        return $this->belongsToMany(Boutique::class, 'produit_boutique')
+                    ->withPivot('quantite') // Définit la quantité de produit dans chaque boutique via la table pivot
+                    ->withTimestamps(); // Gère les colonnes created_at et updated_at de la table pivot.
     }
 }
