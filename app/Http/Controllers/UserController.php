@@ -112,7 +112,9 @@ class UserController extends Controller
 
     public function addRepresentant(Request $request)
 {
-    // Validation des données de la requête
+    $this->authorize('admin'); // Vérifiez si l'utilisateur a le rôle d'administrateur
+
+    // Validation des données
     $validator = Validator::make($request->all(), [
         'nom_complet' => 'required|string|max:255',
         'telephone' => 'required|string|max:15',
@@ -120,7 +122,6 @@ class UserController extends Controller
         'password' => 'required|string|min:6|confirmed',
     ]);
 
-    // Vérifier si la validation échoue
     if ($validator->fails()) {
         return response()->json($validator->errors(), 400);
     }
@@ -131,10 +132,10 @@ class UserController extends Controller
         'telephone' => $request->telephone,
         'email' => $request->email,
         'password' => Hash::make($request->password),
-        'role' => 'representant',  // Assurer que le rôle est 'representant'
+        'role' => 'representant',
     ]);
 
-    // Renvoyer le représentant créé en réponse
     return response()->json($representant, 201);
 }
+
 }
