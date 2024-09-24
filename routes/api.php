@@ -57,14 +57,19 @@ Route::apiResource('regions', controller: RegionController::class);
 Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 Route::apiResource('notifications', NotificationController::class);
 
-Route::middleware('jwt.auth')->group(function () {
-    Route::get('/lignes-commandes', [LigneCommandeController::class, 'index']);
-    Route::post('/lignes-commandes', [LigneCommandeController::class, 'store']);
-    Route::get('/lignes-commandes/{id}', [LigneCommandeController::class, 'show']);
-    Route::put('/lignes-commandes/{id}', [LigneCommandeController::class, 'update']);
-    Route::delete('/lignes-commandes/{id}', [LigneCommandeController::class, 'destroy']);
-});
+// Route::middleware('jwt.auth')->group(function () {
+//     Route::get('/lignes-commandes', [LigneCommandeController::class, 'index']);
+//     Route::post('/lignes-commandes', [LigneCommandeController::class, 'store']);
+//     Route::get('/lignes-commandes/{id}', [LigneCommandeController::class, 'show']);
+//     Route::put('/lignes-commandes/{id}', [LigneCommandeController::class, 'update']);
+//     Route::delete('/lignes-commandes/{id}', [LigneCommandeController::class, 'destroy']);
+// });
 
+
+
+Route::middleware('jwt.auth')->group(function () {
+    Route::apiResource('lignes_commandes', LigneCommandeController::class);
+});
 
 
 
