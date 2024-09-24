@@ -14,6 +14,8 @@ use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProduitBoutiqueController;
 use App\Http\Controllers\LigneCommandeController;
+use App\Http\Controllers\EmailController;
+
 
 
 
@@ -69,6 +71,12 @@ Route::apiResource('notifications', NotificationController::class);
 
 Route::middleware('jwt.auth')->group(function () {
     Route::apiResource('lignes_commandes', LigneCommandeController::class);
+
+
+Route::post('/email/commande/{id}', [EmailController::class, 'envoyerConfirmationCommande']);
+Route::post('/emailpaiement/{id}', [EmailController::class, 'envoyerConfirmationPaiement']);
+
+
 });
 
 
