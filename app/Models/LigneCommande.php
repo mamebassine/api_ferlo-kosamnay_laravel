@@ -21,7 +21,9 @@ class LigneCommande extends Model
     ];
 
     // Définissez la relation avec le modèle ProduitBoutique
+    // public function produit()
     public function produitBoutique()
+
     {
         return $this->belongsTo(ProduitBoutique::class, 'produit_boutique_id');
     }
