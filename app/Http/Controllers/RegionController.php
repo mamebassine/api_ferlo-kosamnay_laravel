@@ -7,59 +7,70 @@ use Illuminate\Http\Request;
 
 class RegionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // Liste toutes les régions
     public function index()
     {
-        //
+        $regions = Region::all();
+        return response()->json($regions, 200); // Spécification du code 200
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    // Affiche une région spécifique
+    public function show($id)
     {
-        //
+        $region = Region::find($id);
+        
+        if (!$region) {
+            return response()->json(['message' => 'Région non trouvée'], 404);
+        }
+
+        return response()->json($region, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    // Crée une nouvelle région
     public function store(Request $request)
     {
-        //
+        // Validation des données
+        $request->validate([
+            'nom' => 'required|string|max:255',
+        ]);
+
+        // Création de la région
+        $region = Region::create($request->only('nom'));
+
+        return response()->json($region, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Region $region)
+    // Met à jour une région existante
+    public function update(Request $request, $id)
     {
-        //
+        // Validation des données
+        $request->validate([
+            'nom' => 'required|string|max:255',
+        ]);
+
+        $region = Region::find($id);
+        
+        if (!$region) {
+            return response()->json(['message' => 'Région non trouvée'], 404);
+        }
+
+        // Mise à jour du nom de la région
+        $region->update($request->only('nom'));
+
+        return response()->json($region, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Region $region)
+    // Supprime une région
+    public function destroy($id)
     {
-        //
-    }
+        $region = Region::find($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Region $region)
-    {
-        //
-    }
+        if (!$region) {
+            return response()->json(['message' => 'Région non trouvée'], 404);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Region $region)
-    {
-        //
+        $region->delete();
+
+        return response()->json(['message' => 'Région supprimée avec succès'], 200);
     }
 }

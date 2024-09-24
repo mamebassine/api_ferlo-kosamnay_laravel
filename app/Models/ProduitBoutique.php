@@ -9,8 +9,16 @@ class ProduitBoutique extends Model
 {
     use HasFactory;
 
-    // Les champs qui peuvent être remplis en masse
+    protected $table = 'produit_boutique';  // Nom de la table
     protected $fillable = ['produit_id', 'boutique_id', 'quantite'];
 
-    // Pas besoin de relation explicite ici car c'est une table pivot entre produits et boutiques
+    public function produit()
+    {
+        return $this->belongsTo(Produit::class, 'produit_id');
+    }
+
+    public function boutique()
+    {
+        return $this->belongsTo(Boutique::class, 'boutique_id');
+    }
 }

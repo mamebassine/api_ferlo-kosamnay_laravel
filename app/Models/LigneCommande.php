@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,33 +10,25 @@ class LigneCommande extends Model
 {
     use HasFactory;
 
-    // Les champs qui peuvent être remplis en masse
-    protected $fillable = ['produit_id', 'user_id', 'date', 'statut', 'quantite_totale', 'prix_total'];
+    // Définissez les attributs mass assignable
+    protected $fillable = [
+        'produit_boutique_id',
+        'user_id',
+        'date',
+        'statut',
+        'quantite_totale',
+        'prix_totale',
+    ];
 
-    /**
-     * Relation avec le modèle User.
-     * Une commande est passée par un utilisateur.
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class); // belongsTo: Une commande appartient à un utilisateur.
-    }
-
-    /**
-     * Relation avec le modèle Produit.
-     * Une commande contient un produit.
-     */
+    // Définissez la relation avec le modèle ProduitBoutique
     public function produit()
     {
-        return $this->belongsTo(Produit::class); // belongsTo: Chaque commande contient un produit.
+        return $this->belongsTo(ProduitBoutique::class, 'produit_boutique_id');
     }
 
-    /**
-     * Relation avec le modèle Paiement.
-     * Une commande peut avoir un paiement associé.
-     */
-    public function paiement()
+    // Définissez la relation avec le modèle User
+    public function user()
     {
-        return $this->hasOne(Paiement::class); // hasOne: Une commande peut avoir un seul paiement.
+        return $this->belongsTo(User::class);
     }
 }

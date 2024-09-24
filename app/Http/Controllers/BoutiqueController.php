@@ -59,6 +59,8 @@ class BoutiqueController extends Controller
         $boutique = Boutique::findOrFail($id);
         $boutique->delete();
 
-        return response()->json(null, 204); // 204 No Content
+        // return response()->json(null, 204); // 204 No Content
+        return response()->json(['message' => 'Région supprimée avec succès']);
+
     }
 }

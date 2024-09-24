@@ -10,7 +10,7 @@ class Notification extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'user_id', // Ajoutez l'utilisateur comme champ remplissable
         'objet',
         'description',
         'lue',
@@ -18,6 +18,6 @@ class Notification extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class); // Lien vers l'utilisateur
     }
 }

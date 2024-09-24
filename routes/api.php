@@ -1,13 +1,22 @@
 <?php
 
+use App\Models\Region;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+
+
 use App\Http\Controllers\UserController;
-
-
-use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\BoutiqueController;
+use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProduitBoutiqueController;
+use App\Http\Controllers\LigneCommandeController;
+
+
+
 
 // // Route pour obtenir les informations de l'utilisateur connecté
 // Route::get('/user', function (Request $request) {
@@ -42,7 +51,26 @@ Route::apiResource('categories', CategorieController::class);
 // Routes pour les produits
 Route::apiResource('produits', ProduitController::class);
 // Routes pour les boutiques
-Route::apiResource('boutiques', BoutiqueController::class);
+Route::apiResource('boutiques', controller: BoutiqueController::class);
+// Routes pour les boutiques
+Route::apiResource('regions', controller: RegionController::class);
+Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
+Route::apiResource('notifications', NotificationController::class);
+
+Route::middleware('jwt.auth')->group(function () {
+    Route::get('/lignes-commandes', [LigneCommandeController::class, 'index']);
+    Route::post('/lignes-commandes', [LigneCommandeController::class, 'store']);
+    Route::get('/lignes-commandes/{id}', [LigneCommandeController::class, 'show']);
+    Route::put('/lignes-commandes/{id}', [LigneCommandeController::class, 'update']);
+    Route::delete('/lignes-commandes/{id}', [LigneCommandeController::class, 'destroy']);
+});
+
+
+
+
+
+
+
 
 
 
