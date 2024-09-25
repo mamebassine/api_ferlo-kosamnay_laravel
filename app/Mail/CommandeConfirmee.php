@@ -16,6 +16,8 @@ class CommandeConfirmee extends Mailable
 
     /**
      * Create a new message instance.
+     *
+     * @param mixed $ligneCommande
      */
     public function __construct($ligneCommande)
     {
@@ -49,6 +51,6 @@ class CommandeConfirmee extends Mailable
      */
     public function attachments(): array
     {
-        return [];
+        return []; // Ajouter des pièces jointes si nécessaire
     }
 }

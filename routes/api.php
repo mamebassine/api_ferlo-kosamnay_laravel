@@ -15,6 +15,7 @@ use App\Http\Controllers\LigneCommandeController;
 use App\Http\Controllers\EmailController;
 
 
+
 // Route pour l'inscription des clients
 Route::post('register', [UserController::class, 'register']);  
 Route::post('login', [UserController::class, 'login'])->name('login');
@@ -52,10 +53,15 @@ Route::middleware('jwt.auth')->group(function () {
     Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
     Route::apiResource('notifications', NotificationController::class);
 
+
+
+
+Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
+Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
+
+
 });
 
-Route::post('/email/commande/{id}', [EmailController::class, 'envoyerConfirmationCommande']);
-Route::post('/email/paiement/{id}', [EmailController::class, 'envoyerConfirmationPaiement']);
 
 
 

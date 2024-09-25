@@ -69,15 +69,28 @@ class ProduitController extends Controller // Déclaration de la classe ProduitC
         return response()->json($produit, 200); // 200 OK
     }
 
-    // DELETE : Supprime un produit
-    public function destroy($id)
-    {
+// DELETE : Supprime un produit
+public function destroy($id)
+{
+    try {
         // Récupère le produit à supprimer ou lance une exception si non trouvé
-        $produit = Produit::findOrFail($id);
+        $produit = Produit::find($id);
+
+        // Vérifie si le produit existe
+        if (!$produit) {
+            // Si le produit n'est pas trouvé, retourner une réponse JSON avec un message d'erreur et le statut HTTP 404
+            return response()->json(['message' => 'Produit non trouvé'], 404);
+        }
+
         // Supprime le produit
         $produit->delete();
 
-        // Renvoie une réponse vide avec un statut 204 (Pas de contenu)
-        return response()->json(null, 204); // 204 No Content
+        // Retourne un message de succès après suppression avec un statut HTTP 200 (OK)
+        return response()->json(['message' => 'Produit supprimé avec succès'], 200);
+    } catch (\Exception $e) {
+        // Si une erreur survient lors de la suppression, retourner un message d'erreur avec un statut HTTP 500 (Erreur serveur)
+        return response()->json(['message' => 'Erreur lors de la suppression'], 500);
     }
+}
+
 }
