@@ -14,6 +14,8 @@ use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProduitBoutiqueController;
 use App\Http\Controllers\LigneCommandeController;
+use App\Http\Controllers\EmailController;
+
 
 
 
@@ -57,13 +59,23 @@ Route::apiResource('regions', controller: RegionController::class);
 Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 Route::apiResource('notifications', NotificationController::class);
 
+// Route::middleware('jwt.auth')->group(function () {
+//     Route::get('/lignes-commandes', [LigneCommandeController::class, 'index']);
+//     Route::post('/lignes-commandes', [LigneCommandeController::class, 'store']);
+//     Route::get('/lignes-commandes/{id}', [LigneCommandeController::class, 'show']);
+//     Route::put('/lignes-commandes/{id}', [LigneCommandeController::class, 'update']);
+//     Route::delete('/lignes-commandes/{id}', [LigneCommandeController::class, 'destroy']);
+// });
+
+
+
 Route::middleware('jwt.auth')->group(function () {
-    Route::get('/lignes-commandes', [LigneCommandeController::class, 'index']);
-    Route::post('/lignes-commandes', [LigneCommandeController::class, 'store']);
-    Route::get('/lignes-commandes/{id}', [LigneCommandeController::class, 'show']);
-    Route::put('/lignes-commandes/{id}', [LigneCommandeController::class, 'update']);
-    Route::delete('/lignes-commandes/{id}', [LigneCommandeController::class, 'destroy']);
+    Route::apiResource('lignes_commandes', LigneCommandeController::class);
 });
+
+
+Route::post('/email/commande/{id}', [EmailController::class, 'envoyerConfirmationCommande']);
+Route::post('/email/paiement/{id}', [EmailController::class, 'envoyerConfirmationPaiement']);
 
 
 

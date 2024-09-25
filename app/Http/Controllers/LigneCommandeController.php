@@ -22,7 +22,9 @@ class LigneCommandeController extends Controller
         $user = $request->user();
 
         // Récupérer toutes les lignes de commande associées à cet utilisateur
-        $lignesCommandes = LigneCommande::where('user_id', $user->id)->with('produit')->get();
+        // $lignesCommandes = LigneCommande::where('user_id', $user->id)->with(relations: 'produit')->get();
+
+        $lignesCommandes = LigneCommande::where('user_id', $user->id)->with(relations: 'ProduitBoutique')->get();
 
         // Retourner les lignes de commande sous forme de réponse JSON
         return response()->json($lignesCommandes);
