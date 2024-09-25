@@ -17,28 +17,20 @@ use App\Http\Controllers\LigneCommandeController;
 use App\Http\Controllers\EmailController;
 
 
-
-
-
-// // Route pour obtenir les informations de l'utilisateur connecté
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('jwt.auth');
-
-
 // Route pour l'inscription des clients
-Route::post('register', [UserController::class, 'register']);  // Inscription pour les clients
-// Routes pour l'administrateur et le représentant
-// Route::post('login', [UserController::class, 'login']); // Connexion pour tous les utilisateurs
-
+Route::post('register', [UserController::class, 'register']);  
 Route::post('login', [UserController::class, 'login'])->name('login');
-
-
-// Deconnexion pour tous les utilisateurs
-
-Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 // Route pour ajouter un représentant (accessible uniquement aux administrateurs)
-// Route::middleware(['auth:api', 'admin'])->post('/representants', [UserController::class, 'addRepresentant']);
+Route::middleware(['auth:api', 'admin'])->post('/representants', [UserController::class, 'addRepresentant']);
+// Deconnexion pour tous les utilisateurs
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
+
+Route::middleware(['jwt.auth'])->group(function () {
+    Route::get('profile', [UserController::class, 'profile']);  
+    Route::post('refresh-token', [UserController::class, 'refreshToken']);
+    Route::post('logout', [UserController::class, 'logout']);
+});
 
 
 // Route::post('logout', [UserController::class, 'logout'])->middleware('auth:api');
@@ -47,32 +39,22 @@ Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 // Route::post('refresh-token', [UserController::class, 'refreshToken'])->middleware('auth:api');
 
 
-
-// Routes pour les catégories
-Route::apiResource('categories', CategorieController::class);
-// Routes pour les produits
-Route::apiResource('produits', ProduitController::class);
-// Routes pour les boutiques
-Route::apiResource('boutiques', controller: BoutiqueController::class);
-// Routes pour les boutiques
-Route::apiResource('regions', controller: RegionController::class);
-Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
-Route::apiResource('notifications', NotificationController::class);
-
-// Route::middleware('jwt.auth')->group(function () {
-//     Route::get('/lignes-commandes', [LigneCommandeController::class, 'index']);
-//     Route::post('/lignes-commandes', [LigneCommandeController::class, 'store']);
-//     Route::get('/lignes-commandes/{id}', [LigneCommandeController::class, 'show']);
-//     Route::put('/lignes-commandes/{id}', [LigneCommandeController::class, 'update']);
-//     Route::delete('/lignes-commandes/{id}', [LigneCommandeController::class, 'destroy']);
-// });
-
-
-
 Route::middleware('jwt.auth')->group(function () {
     Route::apiResource('lignes_commandes', LigneCommandeController::class);
-});
 
+    // Routes pour les catégories
+    Route::apiResource('categories', CategorieController::class);
+    // Routes pour les produits
+    Route::apiResource('produits', ProduitController::class);
+
+    // Routes pour les boutiques
+    Route::apiResource('boutiques', controller: BoutiqueController::class);
+    // Routes pour les boutiques
+    Route::apiResource('regions', controller: RegionController::class);
+    Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
+    Route::apiResource('notifications', NotificationController::class);
+
+});
 
 Route::post('/email/commande/{id}', [EmailController::class, 'envoyerConfirmationCommande']);
 Route::post('/email/paiement/{id}', [EmailController::class, 'envoyerConfirmationPaiement']);

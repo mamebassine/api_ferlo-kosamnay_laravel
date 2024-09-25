@@ -7,15 +7,14 @@ use Illuminate\Http\Request;  // Importation de la classe Request pour manipuler
 use Illuminate\Support\Facades\Hash;  // Importation pour le hachage des mots de passe
 use Illuminate\Support\Facades\Validator;  // Importation pour la validation des données
 use Tymon\JWTAuth\Facades\JWTAuth;  // Importation pour gérer l'authentification JWT
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class UserController extends Controller
 {
-    /**
-     * Enregistrement d'un nouvel utilisateur.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+        use AuthorizesRequests;  // Ajout du trait pour permettre l'autorisation
+
+    /*Enregistrement d'un nouvel utilisateur.*/
     public function register(Request $request)
     {
         // Validation des données de la requête
@@ -47,12 +46,7 @@ class UserController extends Controller
         return response()->json(compact('user', 'token'), 201);
     }
 
-    /**
-     * Connexion d'un utilisateur.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+    /*Connexion d'un utilisateur.*/
     public function login(Request $request)
     {
         // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
@@ -67,11 +61,7 @@ class UserController extends Controller
         return response()->json(compact('token'));
     }
 
-    /**
-     * Obtenir les informations du profil de l'utilisateur connecté.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+    /*Obtenir les informations du profil de l'utilisateur connecté.*/
     public function profile()
     {
         // Récupérer l'utilisateur actuellement authentifié via le token JWT
@@ -81,11 +71,7 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    /**
-     * Méthode de déconnexion.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+    /*Méthode de déconnexion.*/
     public function logout()
     {
         // Invalidation du token JWT pour déconnecter l'utilisateur
