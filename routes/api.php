@@ -71,14 +71,11 @@ Route::apiResource('notifications', NotificationController::class);
 
 Route::middleware('jwt.auth')->group(function () {
     Route::apiResource('lignes_commandes', LigneCommandeController::class);
+});
 
 
 Route::post('/email/commande/{id}', [EmailController::class, 'envoyerConfirmationCommande']);
-Route::post('/emailpaiement/{id}', [EmailController::class, 'envoyerConfirmationPaiement']);
-
-
-});
-
+Route::post('/email/paiement/{id}', [EmailController::class, 'envoyerConfirmationPaiement']);
 
 
 
