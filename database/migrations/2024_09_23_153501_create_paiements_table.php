@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('paiements', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ligne_commande_id')->constrained('ligne_commandes');
+            $table->foreignId('ligne_commande_id')->constrained('ligne_commandes')->onDelete('cascade');  // Clé étrangère vers la table "ligne_commandes"
             $table->decimal('montant', 8, 2);
             $table->date('date');
             $table->enum('type', ['espece', 'wallet']);

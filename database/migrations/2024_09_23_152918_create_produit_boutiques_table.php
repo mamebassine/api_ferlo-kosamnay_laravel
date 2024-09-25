@@ -14,8 +14,8 @@ return new class extends Migration
 // Crée la table pivot "produit_boutique" avec les colonnes pour relier produits et boutiques
 Schema::create('produit_boutique', function (Blueprint $table) {
     $table->id();  // Clé primaire
-    $table->foreignId('produit_id')->constrained('produits');  // Clé étrangère vers la table "produits"
-    $table->foreignId('boutique_id')->constrained('boutiques');  // Clé étrangère vers la table "boutiques"
+    $table->foreignId('produit_id')->constrained('produits')->onDelete('cascade');  // Clé étrangère vers la table "produits" avec suppression en cascade
+    $table->foreignId('boutique_id')->constrained('boutiques')->onDelete('cascade');  // Clé étrangère vers la table "boutiques" avec suppression en cascade
     $table->integer('quantite');  // Quantité de produits disponibles dans la boutique
     $table->timestamps();  // Colonnes de date
 });
