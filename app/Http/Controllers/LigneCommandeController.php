@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail; // Import de la façade Mail
 use App\Mail\CommandePayee; // Import du Mailable CommandePayee
 use App\Mail\CommandeConfirmee; // Import du Mailable CommandeConfirmee
+use Illuminate\Support\Facades\Log;
 
 class LigneCommandeController extends Controller
 {
@@ -62,9 +63,14 @@ class LigneCommandeController extends Controller
             'prix_totale' => $request->input('prix_totale')
         ]);
 
-        // Envoi d'un email de confirmation de commande
-        Mail::to($request->user()->email)->send(new CommandeConfirmee($ligneCommande));
-
+        try {
+            Mail::to($request->user()->email)->send(new CommandeConfirmee($ligneCommande));
+        } catch (\Exception $e) {
+            // Log l'erreur pour le débogage
+        Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage());
+            return response()->json(['error' => 'Erreur lors de l\'envoi de l\'email'], 500);
+        }
+        // Retourne la ligne de commande créée avec un statut 201
         return response()->json($ligneCommande, 201);
     }
 
