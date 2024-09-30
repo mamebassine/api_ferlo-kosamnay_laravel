@@ -24,6 +24,8 @@ class BoutiqueController extends Controller
             'adresse' => 'required|string',
             'telephone' => 'required|string',
             'region_id' => 'required|exists:regions,id',
+            'user_id' => 'nullable|exists:regions,id',
+
         ]);
 
         $boutique = Boutique::create($validatedData);
@@ -56,6 +58,8 @@ class BoutiqueController extends Controller
             'adresse' => 'nullable|string',
             'telephone' => 'nullable|string',
             'region_id' => 'nullable|exists:regions,id',
+            'user_id' => 'nullable|exists:regions,id',
+
         ]);
 
         $boutique->update($validatedData);

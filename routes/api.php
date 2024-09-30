@@ -91,5 +91,13 @@ Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerCon
 
 
 
+Route::middleware('jwt.auth')->group(function () {
+    Route::apiResource('lignes_commandes', LigneCommandeController::class);
+
+Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
+Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
+
+
+});
 
 

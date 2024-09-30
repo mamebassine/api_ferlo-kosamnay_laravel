@@ -38,11 +38,11 @@ class CommandeConfirmee extends Mailable
      * Obtient la définition du contenu du message.
      */
     public function content(): Content
-    {
-        return new Content(
-            text: "Votre commande a été confirmée.\nProduit: {$this->ligneCommande->produitBoutique->nom}\nQuantité: {$this->ligneCommande->quantite_totale}\nPrix Total: {$this->ligneCommande->prix_totale}",
-        );
-    }
+{
+    return new Content(
+        view: 'emails.commande_confirmee', // Utilisation d'une vue pour l'email
+    );
+}
 
     /**
      * Obtient les pièces jointes pour le message.

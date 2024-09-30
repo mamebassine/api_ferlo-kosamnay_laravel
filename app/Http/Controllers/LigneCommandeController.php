@@ -21,9 +21,9 @@ class LigneCommandeController extends Controller
         if (!$request->user()) {
             return response()->json(['error' => 'Utilisateur non authentifié'], 401); //Retourne une erreur si non authentifié
         }
+        Log::info($request->user());
 
         $user = $request->user(); // Récupère l'utilisateur connecté
-
 
         // Récupérer toutes les lignes de commande associées à cet utilisateur
         // $lignesCommandes = LigneCommande::where('user_id', $user->id)->with(relations: 'produit')->get();
@@ -45,35 +45,34 @@ class LigneCommandeController extends Controller
         if (!$request->user()) {
             return response()->json(['error' => 'Non autorisé'], 403);
         }
+    
         // Valide les données de la requête avant de créer la ligne de commande
-
         $request->validate([
-            'produit_boutique_id' => 'required|exists:produit_boutique,id', // Le produit doit exister dans la table produit_boutique
-            'quantite_totale' => 'required|integer|min:1', // La quantité doit être un entier supérieur ou égal à 1
-            'prix_totale' => 'required|numeric' // Le prix doit être un nombre valide
+            'produit_boutique_id' => 'required|exists:produit_boutique,id', 
+            'quantite_totale' => 'required|integer|min:1', 
+            'prix_totale' => 'required|numeric' 
         ]);
-
-        // Crée une nouvelle ligne de commande en utilisant les données fournies
+    
+        // Crée une nouvelle ligne de commande
         $ligneCommande = LigneCommande::create([
             'produit_boutique_id' => $request->input('produit_boutique_id'),
-            'user_id' => Auth::id(), // Utilise l'ID de l'utilisateur authentifié
-            'date' => now(), // Date actuelle
-            'statut' => 'en attente', // Statut par défaut
+            'user_id' => Auth::id(),
+            'date' => now(),
+            'statut' => 'en attente',
             'quantite_totale' => $request->input('quantite_totale'),
             'prix_totale' => $request->input('prix_totale')
         ]);
-
+    
         try {
             Mail::to($request->user()->email)->send(new CommandeConfirmee($ligneCommande));
         } catch (\Exception $e) {
-            // Log l'erreur pour le débogage
-        Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage());
+            Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage());
             return response()->json(['error' => 'Erreur lors de l\'envoi de l\'email'], 500);
         }
-        // Retourne la ligne de commande créée avec un statut 201
+    
         return response()->json($ligneCommande, 201);
     }
-
+    
     /*Met à jour une ligne de commande existante.
      */
     public function update(Request $request, $id)
