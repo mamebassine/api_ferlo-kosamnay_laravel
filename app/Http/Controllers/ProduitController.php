@@ -27,13 +27,15 @@ class ProduitController extends Controller // Déclaration de la classe ProduitC
             'quantite' => 'required|integer', // La quantité doit être requise et de type entier
             'reference' => 'required|string|unique:produits,reference', // La référence doit être requise, de type chaîne et unique dans la table produits
             'nom' => 'required|string', // Le nom doit être requis et de type chaîne
+            // 'nom_complet' => 'required|string', // Ajoutez une validation pour nom_complet
+
         ]);
 
         // Crée un nouveau produit avec les données validées
         $produit = Produit::create($validatedData);
 
         // Renvoie le produit créé avec un statut 201 (Créé)
-        return response()->json($produit, 201); // 201 Created
+        return response()->json($produit->load('categorie', 'boutiques'), 201);
     }
 
     // GET : Affiche un produit spécifique
@@ -60,13 +62,15 @@ class ProduitController extends Controller // Déclaration de la classe ProduitC
             'quantite' => 'nullable|integer', // La quantité peut être laissée vide, mais doit être entière si fournie
             'reference' => 'nullable|string|unique:produits,reference,' . $produit->id, // La référence peut être laissée vide, mais doit être unique si fournie, sauf pour le produit actuel
             'nom' => 'nullable|string', // Le nom peut être laissé vide, mais doit être de type chaîne si fourni
+            // 'nom_complet' => 'nullable|string',
+
         ]);
 
         // Met à jour le produit avec les données validées
         $produit->update($validatedData);
 
         // Renvoie le produit mis à jour avec un statut 200 (OK)
-        return response()->json($produit, 200); // 200 OK
+        return response()->json($produit->load('categorie', 'boutiques'), 200);
     }
 
 // DELETE : Supprime un produit

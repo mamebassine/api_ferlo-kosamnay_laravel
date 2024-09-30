@@ -11,4 +11,13 @@ class Region extends Model
 
     // Les champs qui peuvent être remplis en masse
     protected $fillable = ['nom'];
+
+     /**
+     * Relation avec le modèle Boutique.
+     * Une région peut avoir une boutique (0..1).
+     */
+    public function boutique()
+    {
+        return $this->hasOne(Boutique::class); // Une région peut avoir une boutique.
+    }
 }

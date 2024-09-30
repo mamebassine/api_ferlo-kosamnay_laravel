@@ -22,6 +22,7 @@ class CategorieController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'image' => 'required|string',
             'nom_complet' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
@@ -51,6 +52,7 @@ public function update(Request $request, $id)
 {
     // Valider les données envoyées dans la requête pour s'assurer que les champs sont corrects
     $validatedData = $request->validate([
+        'image' => 'required|string',
         'nom_complet' => 'required|string|max:255',  // Le nom complet est obligatoire et doit être une chaîne de caractères
         'description' => 'nullable|string',  // La description est optionnelle mais doit être une chaîne si présente
     ]);

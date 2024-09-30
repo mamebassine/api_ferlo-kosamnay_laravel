@@ -38,33 +38,54 @@ Route::middleware(['jwt.auth'])->group(function () {
 // Route::post('refresh-token', [UserController::class, 'refreshToken'])->middleware('auth:api');
 
 
-Route::middleware('jwt.auth')->group(function () {
-    Route::apiResource('lignes_commandes', LigneCommandeController::class);
+// Route::middleware('jwt.auth')->group(function () {
+//     Route::apiResource('lignes_commandes', LigneCommandeController::class);
 
-    // Routes pour les catégories
-    Route::apiResource('categories', CategorieController::class);
-    // Routes pour les produits
-    Route::apiResource('produits', ProduitController::class);
+//     // Routes pour les catégories
+//     Route::apiResource('categories', CategorieController::class);
+//     // Routes pour les produits
+//     Route::apiResource('produits', ProduitController::class);
 
-    // Routes pour les boutiques
-    Route::apiResource('boutiques', controller: BoutiqueController::class);
-    // Routes pour les boutiques
-    Route::apiResource('regions', controller: RegionController::class);
-    Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
-    Route::apiResource('notifications', NotificationController::class);
+//     // Routes pour les boutiques
+//     Route::apiResource('boutiques', controller: BoutiqueController::class);
+//     // Routes pour les boutiques
+//     Route::apiResource('regions', controller: RegionController::class);
+//     Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
+//     Route::apiResource('notifications', NotificationController::class);
 
 
 
+
+// Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
+// Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
+
+
+// });
+
+
+
+
+Route::apiResource('lignes_commandes', LigneCommandeController::class);
+
+// Routes pour les catégories
+Route::apiResource('categories', CategorieController::class);
+// Routes pour les produits
+Route::apiResource('produits', ProduitController::class);
+// Route::put('produits/{id}', [ProduitController::class, 'update']);
+
+
+
+// Routes pour les boutiques
+Route::apiResource('boutiques', controller: BoutiqueController::class);
+
+// Routes pour les REGION
+Route::apiResource('regions', controller: RegionController::class);
+Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
+
+Route::apiResource('notifications', NotificationController::class);
 
 Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
 Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
-
-
-});
-
-
-
-
 
 
 

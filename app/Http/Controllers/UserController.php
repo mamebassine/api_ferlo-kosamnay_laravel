@@ -43,7 +43,12 @@ class UserController extends Controller
         $token = JWTAuth::fromUser($user);
 
         // Renvoyer l'utilisateur et le token en réponse avec un code 201 (créé)
-        return response()->json(compact('user', 'token'), 201);
+        // return response()->json(compact('user', 'token'), 201);
+        return response()->json([
+            'message' => 'Utilisateur enregistré avec succès.',
+            'user' => $user,
+            'token' => $token
+        ], 201);
     }
 
     /*Connexion d'un utilisateur.*/
@@ -57,8 +62,13 @@ class UserController extends Controller
             return response()->json(['error' => 'Identifiants invalides'], 401);
         }
 
-        // Si les identifiants sont corrects, renvoyer le token JWT
-        return response()->json(compact('token'));
+        // // Si les identifiants sont corrects, renvoyer le token JWT
+        // return response()->json(compact('token'));
+
+        return response()->json([
+            'message' => 'Connexion réussie.',
+            'token' => $token
+        ]);
     }
 
     /*Obtenir les informations du profil de l'utilisateur connecté.*/
@@ -95,6 +105,7 @@ class UserController extends Controller
         return response()->json(compact('token'));
     }
 
+    /* Ajout d'un représentant par l'administrateur. */
 
     public function addRepresentant(Request $request)
 {
@@ -121,7 +132,12 @@ class UserController extends Controller
         'role' => 'representant',
     ]);
 
-    return response()->json($representant, 201);
+    // return response()->json($representant, 201);
+
+    return response()->json([
+        'message' => 'Représentant ajouté avec succès.',
+        'representant' => $representant
+    ], 201);
 }
 
 }
