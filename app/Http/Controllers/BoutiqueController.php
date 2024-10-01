@@ -12,7 +12,7 @@ class BoutiqueController extends Controller
     public function index()
     {
         // return response()->json(Boutique::with('region', 'produits')->get(), 200);
-        $boutiques = Boutique::with('region', 'produits')->get();
+        $boutiques = Boutique::with('region', 'produits', 'user')->get();
         return response()->json(['boutiques' => $boutiques], 200);
     }
 
