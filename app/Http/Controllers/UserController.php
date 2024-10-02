@@ -140,4 +140,41 @@ class UserController extends Controller
     ], 201);
 }
 
+
+
+
+// Méthode pour récupérer tous les utilisateurs
+public function index()
+{
+    $users = User::all();
+    return response()->json($users, 200); 
+}
+
+// Méthode pour afficher les détails d'un utilisateur spécifique
+public function show(User $user)
+{
+    return response()->json($user, 200);
+}
+
+/* Méthode pour supprimer un utilisateur */
+public function destroy(User $user)
+{
+    $user->delete();
+    return response()->json(null, 204);
+}
+
+/* Méthode pour récupérer les représentants */
+public function getRepresentants()
+{
+    $representants = User::where('role', 'representant')->get();
+    return response()->json($representants, 200);
+}
+
+/* Méthode pour récupérer les clients */
+public function getClients()
+{
+    $clients = User::where('role', 'client')->get();
+    return response()->json($clients, 200);
+}
+    
 }

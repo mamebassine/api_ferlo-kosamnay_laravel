@@ -15,6 +15,20 @@ use App\Http\Controllers\LigneCommandeController;
 use App\Http\Controllers\EmailController;
 
 
+// Opérations CRUD standard pour les utilisateurs
+    Route::apiResource('users', UserController::class);
+
+    // Routes personnalisées pour récupérer les représentants et les clients
+    Route::get('representants', [UserController::class, 'getRepresentants']);
+    Route::get('clients', [UserController::class, 'getClients']);
+
+    // // Route pour ajouter un représentant (accessible uniquement aux administrateurs)
+    // Route::middleware(['admin'])->post('representants', [UserController::class, 'addRepresentant']);
+
+
+
+
+
 
 // Route pour l'inscription des clients
 Route::post('register', [UserController::class, 'register']);  
