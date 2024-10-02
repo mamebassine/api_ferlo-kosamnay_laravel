@@ -22,6 +22,8 @@ class UserController extends Controller
             'nom_complet' => 'required|string|max:255',  // Le nom complet est obligatoire, de type string, et ne peut pas dépasser 255 caractères
             'telephone' => 'required|string|max:15',  // Le numéro de téléphone est obligatoire et limité à 15 caractères
             'email' => 'required|string|email|max:255|unique:users',  // L'email est obligatoire, doit être unique et ne peut pas dépasser 255 caractères
+            'adresse' => 'required|string|max:255',  // Le nom complet est obligatoire, de type string, et ne peut pas dépasser 255 caractères
+
             'password' => 'required|string|min:6|confirmed',  // Le mot de passe est obligatoire, doit faire au moins 6 caractères et être confirmé
         ]);
 
@@ -35,6 +37,8 @@ class UserController extends Controller
             'nom_complet' => $request->nom_complet,  // Nom de l'utilisateur
             'telephone' => $request->telephone,  // Téléphone de l'utilisateur
             'email' => $request->email,  // Email de l'utilisateur
+            'adresse' => $request->adresse,  // Nom de l'utilisateur
+
             'password' => Hash::make($request->password),  // Hashage du mot de passe avant stockage pour plus de sécurité
             'role' => 'client',  // Rôle par défaut de l'utilisateur, ici "client"
         ]);
@@ -116,6 +120,8 @@ class UserController extends Controller
         'nom_complet' => 'required|string|max:255',
         'telephone' => 'required|string|max:15',
         'email' => 'required|string|email|max:255|unique:users',
+        'adresse' => 'required|string|max:255',
+
         'password' => 'required|string|min:6|confirmed',
     ]);
 
@@ -126,6 +132,8 @@ class UserController extends Controller
     // Création du représentant
     $representant = User::create([
         'nom_complet' => $request->nom_complet,
+        'adresse' => $request->adresse,
+
         'telephone' => $request->telephone,
         'email' => $request->email,
         'password' => Hash::make($request->password),
