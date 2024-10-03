@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\Region;
+use App\Models\adresse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\RegionController;
+use App\Http\Controllers\adresseController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\BoutiqueController;
 use App\Http\Controllers\CategorieController;
@@ -63,7 +63,7 @@ Route::middleware(['jwt.auth'])->group(function () {
 //     // Routes pour les boutiques
 //     Route::apiResource('boutiques', controller: BoutiqueController::class);
 //     // Routes pour les boutiques
-//     Route::apiResource('regions', controller: RegionController::class);
+//     Route::apiResource('adresses', controller: adresseController::class);
 //     Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 //     Route::apiResource('notifications', NotificationController::class);
 
@@ -92,8 +92,8 @@ Route::apiResource('produits', ProduitController::class);
 // Routes pour les boutiques
 Route::apiResource('boutiques', controller: BoutiqueController::class);
 
-// Routes pour les REGION
-Route::apiResource('regions', controller: RegionController::class);
+// Routes pour les adresse
+Route::apiResource('adresses', controller: adresseController::class);
 Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 
 Route::apiResource('notifications', NotificationController::class);

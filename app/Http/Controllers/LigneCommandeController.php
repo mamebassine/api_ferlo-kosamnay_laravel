@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Mail\CommandePayee; // Import du Mailable CommandePayee
+use Illuminate\Support\Facades\Mail; // Import de la façade Mail
+use App\Mail\CommandeConfirmee; // Import du Mailable CommandeConfirmee
 use App\Models\LigneCommande; // Assurez-vous que le modèle LigneCommande est créé
 use App\Models\ProduitBoutique; // Assurez-vous que le modèle ProduitBoutique est créé
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail; // Import de la façade Mail
-use App\Mail\CommandePayee; // Import du Mailable CommandePayee
-use App\Mail\CommandeConfirmee; // Import du Mailable CommandeConfirmee
-use Illuminate\Support\Facades\Log;
 
 class LigneCommandeController extends Controller
 {
@@ -64,13 +65,34 @@ class LigneCommandeController extends Controller
         ]);
     
         try {
-            Mail::to($request->user()->email)->send(new CommandeConfirmee($ligneCommande));
-        } catch (\Exception $e) {
-            Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage());
-            return response()->json(['error' => 'Erreur lors de l\'envoi de l\'email'], 500);
-        }
+            // Récupérer tous les utilisateurs avec le rôle 'representant'
+            $representants = User::where('role', 'representant')->get();
     
-        return response()->json($ligneCommande, 201);
+            // Vérifier s'il y a des représentants avant d'envoyer des emails
+            if ($representants->isEmpty()) {
+                return response()->json(['error' => 'Aucun représentant trouvé'], 404);
+            }
+    
+            // Envoyer un email à chaque représentant
+            foreach ($representants as $representant) {
+                Mail::to($representant->email)->send(new CommandeConfirmee($ligneCommande));
+            }
+    
+            // Retourner une réponse de succès si tous les emails sont envoyés
+            return response()->json(['success' => 'Emails envoyés avec succès'], 200);
+        } catch (\Exception $e) {
+            // Enregistrer les détails de l'erreur dans les logs
+            Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString(),
+            ]);
+    
+            // Afficher le message d'erreur exact (à utiliser uniquement en développement)
+            return response()->json([
+                'error' => 'Erreur lors de l\'envoi de l\'email',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
     
     /*Met à jour une ligne de commande existante.

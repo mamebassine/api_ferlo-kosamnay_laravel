@@ -10,15 +10,15 @@ class Boutique extends Model
     use HasFactory;
 
     // Les champs qui peuvent être remplis en masse
-    protected $fillable = ['nom', 'adresse', 'telephone', 'region_id', 'user_id'];
+    protected $fillable = ['nom', 'adresse', 'telephone', 'adresse_id', 'user_id'];
 
     /**
-     * Relation avec le modèle Region.
+     * Relation avec le modèle adresse.
      * Une boutique appartient à une région.
      */
-    public function region()
+    public function adresse()
     {
-        return $this->belongsTo(Region::class); // belongsTo: Une boutique appartient à une région.
+        return $this->belongsTo(adresse::class); // belongsTo: Une boutique appartient à une région.
     }
 
     /**

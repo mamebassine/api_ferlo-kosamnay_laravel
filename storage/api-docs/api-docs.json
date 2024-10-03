@@ -758,7 +758,7 @@
                 ]
             }
         },
-        "/api/regions": {
+        "/api/adresses": {
             "get": {
                 "summary": "Afficher la liste",
                 "description": "",
@@ -792,7 +792,7 @@
                     }
                 },
                 "tags": [
-                    "Gestion des regions"
+                    "Gestion des adresses"
                 ],
                 "parameters": [
                     {
@@ -844,7 +844,7 @@
                     }
                 },
                 "tags": [
-                    "Gestion des regions"
+                    "Gestion des adresses"
                 ],
                 "parameters": [
                     {
@@ -872,7 +872,7 @@
                 }
             }
         },
-        "/api/regions/8": {
+        "/api/adresses/8": {
             "get": {
                 "summary": "Voir detail",
                 "description": "",
@@ -906,7 +906,7 @@
                     }
                 },
                 "tags": [
-                    "Gestion des regions"
+                    "Gestion des adresses"
                 ],
                 "parameters": [
                     {
@@ -917,7 +917,7 @@
                 ]
             }
         },
-        "/api/regions/3": {
+        "/api/adresses/3": {
             "delete": {
                 "summary": "Supprimer",
                 "description": "",
@@ -960,7 +960,7 @@
                     }
                 },
                 "tags": [
-                    "Gestion des regions"
+                    "Gestion des adresses"
                 ],
                 "parameters": [
                     {
@@ -971,7 +971,7 @@
                 ]
             }
         },
-        "/api/regions/11": {
+        "/api/adresses/11": {
             "put": {
                 "summary": "Modifier",
                 "description": "",
@@ -1005,7 +1005,7 @@
                     }
                 },
                 "tags": [
-                    "Gestion des regions"
+                    "Gestion des adresses"
                 ],
                 "parameters": [
                     {
@@ -1434,7 +1434,7 @@
                                     "telephone": {
                                         "type": "string"
                                     },
-                                    "region_id": {
+                                    "adresse_id": {
                                         "type": "integer"
                                     }
                                 }
@@ -1443,7 +1443,7 @@
                                 "nom": "Ferlo-kosamnay",
                                 "adresse": "124 Rue gou",
                                 "telephone": "771065156",
-                                "region_id": 1
+                                "adresse_id": 1
                             }
                         }
                     }
@@ -1607,7 +1607,7 @@
                                     "telephone": {
                                         "type": "string"
                                     },
-                                    "region_id": {
+                                    "adresse_id": {
                                         "type": "integer"
                                     }
                                 }
@@ -1616,7 +1616,7 @@
                                 "nom": "Ferlo-kosamnay",
                                 "adresse": "124 Rue goutes",
                                 "telephone": "771065156",
-                                "region_id": 1
+                                "adresse_id": 1
                             }
                         }
                     }

@@ -146,6 +146,10 @@ class UserController extends Controller
         'message' => 'Représentant ajouté avec succès.',
         'representant' => $representant
     ], 201);
+    // // Envoyer un e-mail avec les identifiants
+    // $user->notify(new UserCreatedNotification($user->email, $request->password));
+
+    // return response()->json(['message' => 'User created successfully', 'user' => $user]);
 }
 
 
