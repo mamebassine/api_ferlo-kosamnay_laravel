@@ -25,6 +25,15 @@ class User extends Authenticatable implements JWTSubject
         return []; // Vous pouvez ajouter des données personnalisées ici
     }
 
+     /**
+     * Relation avec le modèle Boutique.
+     * Un utilisateur possède une boutique (1..1).
+     */
+    public function boutique()
+    {
+        return $this->hasOne(Boutique::class); // Un utilisateur a une boutique.
+    }
+
     /**
      * Relation avec le modèle LigneCommande.
      * Un utilisateur peut passer plusieurs commandes.
@@ -42,4 +51,6 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Notification::class); // Un utilisateur peut recevoir plusieurs notifications.
     }
+
+    
 }

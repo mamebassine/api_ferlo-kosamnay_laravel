@@ -12,30 +12,30 @@ class CommandePayee extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $ligneCommande;
+    public $ligneCommande; // Propriété pour stocker la ligne de commande
 
     /**
-     * Create a new message instance.
+     * Crée une nouvelle instance de message.
      *
      * @param mixed $ligneCommande
      */
     public function __construct($ligneCommande)
     {
-        $this->ligneCommande = $ligneCommande;
+        $this->ligneCommande = $ligneCommande; // Initialise la propriété avec la ligne de commande
     }
 
     /**
-     * Get the message envelope.
+     * Obtient l'enveloppe du message.
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre commande a été payée',
+            subject: 'Votre commande a été payée', // Sujet de l'email
         );
     }
 
     /**
-     * Get the message content definition.
+     * Obtient la définition du contenu du message.
      */
     public function content(): Content
     {
@@ -45,7 +45,7 @@ class CommandePayee extends Mailable
     }
 
     /**
-     * Get the attachments for the message.
+     * Obtient les pièces jointes pour le message.
      *
      * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */

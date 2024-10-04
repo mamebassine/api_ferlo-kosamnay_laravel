@@ -11,7 +11,9 @@ class BoutiqueController extends Controller
     // GET : Liste toutes les boutiques
     public function index()
     {
-        return response()->json(Boutique::with('region', 'produits')->get(), 200);
+        // return response()->json(Boutique::with('region', 'produits')->get(), 200);
+        $boutiques = Boutique::with('region', 'produits', 'user')->get();
+        return response()->json(['boutiques' => $boutiques], 200);
     }
 
     // POST : Crée une nouvelle boutique
@@ -22,18 +24,28 @@ class BoutiqueController extends Controller
             'adresse' => 'required|string',
             'telephone' => 'required|string',
             'region_id' => 'required|exists:regions,id',
+            'user_id' => 'nullable|exists:regions,id',
+
         ]);
 
         $boutique = Boutique::create($validatedData);
 
-        return response()->json($boutique, 201); // 201 Created
+        // return response()->json($boutique, 201); 
+
+        return response()->json([
+            'message' => 'Boutique créée avec succès.',
+            'boutique' => $boutique
+        ], 201);
     }
 
     // GET : Affiche une boutique spécifique
     public function show($id)
     {
+        // $boutique = Boutique::with('region', 'produits')->findOrFail($id);
+        // return response()->json($boutique, 200);
+
         $boutique = Boutique::with('region', 'produits')->findOrFail($id);
-        return response()->json($boutique, 200);
+        return response()->json(['boutique' => $boutique], 200);
     }
 
     // PUT/PATCH : Met à jour une boutique
@@ -42,15 +54,22 @@ class BoutiqueController extends Controller
         $boutique = Boutique::findOrFail($id);
 
         $validatedData = $request->validate([
-            'nom' => 'sometimes|string|max:255',
-            'adresse' => 'sometimes|string',
-            'telephone' => 'sometimes|string',
-            'region_id' => 'sometimes|exists:regions,id',
+            'nom' => 'nullable|string|max:255',
+            'adresse' => 'nullable|string',
+            'telephone' => 'nullable|string',
+            'region_id' => 'nullable|exists:regions,id',
+            'user_id' => 'nullable|exists:regions,id',
+
         ]);
 
         $boutique->update($validatedData);
 
-        return response()->json($boutique, 200); // 200 OK
+        // return response()->json($boutique, 200); // 200 OK
+
+        return response()->json([
+            'message' => 'Boutique mise à jour avec succès.',
+            'boutique' => $boutique
+        ], 200);
     }
 
     // DELETE : Supprime une boutique

@@ -12,40 +12,40 @@ class CommandeConfirmee extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $ligneCommande;
+    public $ligneCommande; // Propriété pour stocker la ligne de commande
 
     /**
-     * Create a new message instance.
+     * Crée une nouvelle instance de message.
      *
      * @param mixed $ligneCommande
      */
     public function __construct($ligneCommande)
     {
-        $this->ligneCommande = $ligneCommande;
+        $this->ligneCommande = $ligneCommande; // Initialise la propriété avec la ligne de commande
     }
 
     /**
-     * Get the message envelope.
+     * Obtient l'enveloppe du message.
      */
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre commande a été confirmée',
+            subject: 'Votre commande a été confirmée', // Sujet de l'email
         );
     }
 
     /**
-     * Get the message content definition.
+     * Obtient la définition du contenu du message.
      */
     public function content(): Content
-    {
-        return new Content(
-            text: "Votre commande a été confirmée.\nProduit: {$this->ligneCommande->produitBoutique->nom}\nQuantité: {$this->ligneCommande->quantite_totale}\nPrix Total: {$this->ligneCommande->prix_totale}",
-        );
-    }
+{
+    return new Content(
+        view: 'emails.commande_confirmee', // Utilisation d'une vue pour l'email
+    );
+}
 
     /**
-     * Get the attachments for the message.
+     * Obtient les pièces jointes pour le message.
      *
      * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */

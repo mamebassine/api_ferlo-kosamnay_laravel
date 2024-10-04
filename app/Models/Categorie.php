@@ -10,7 +10,7 @@ class Categorie extends Model
     use HasFactory;
 
     // Les champs qui peuvent être remplis en masse (via $fillable)
-    protected $fillable = ['nom_complet', 'description'];
+    protected $fillable = ['nom_complet', 'description', 'image'];
 
     /**
      * Relation avec le modèle Produit.
