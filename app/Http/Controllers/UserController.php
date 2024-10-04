@@ -56,24 +56,49 @@ class UserController extends Controller
     }
 
     /*Connexion d'un utilisateur.*/
-    public function login(Request $request)
-    {
-        // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
-        $credentials = $request->only('email', 'password');
+    // public function login(Request $request)
+    // {
+    //     // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
+    //     $credentials = $request->only('email', 'password');
 
-        // Vérification des identifiants avec JWT. Si incorrects, renvoyer une erreur 401
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Identifiants invalides'], 401);
-        }
+    //     // Vérification des identifiants avec JWT. Si incorrects, renvoyer une erreur 401
+    //     if (!$token = JWTAuth::attempt($credentials)) {
+    //         return response()->json(['error' => 'Identifiants invalides'], 401);
+    //     }
 
-        // // Si les identifiants sont corrects, renvoyer le token JWT
-        // return response()->json(compact('token'));
+    //     // // Si les identifiants sont corrects, renvoyer le token JWT
+    //     // return response()->json(compact('token'));
 
-        return response()->json([
-            'message' => 'Connexion réussie.',
-            'token' => $token
-        ]);
+    //     return response()->json([
+    //         'message' => 'Connexion réussie.',
+    //         'token' => $token
+    //     ]);
+    // }
+
+
+
+    /* Connexion d'un utilisateur. */
+public function login(Request $request)
+{
+    // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
+    $credentials = $request->only('email', 'password');
+
+    // Vérification des identifiants avec JWT. Si incorrects, renvoyer une erreur 401
+    if (!$token = JWTAuth::attempt($credentials)) {
+        return response()->json(['error' => 'Identifiants invalides'], 401);
     }
+
+    // Récupération de l'utilisateur authentifié
+    $user = JWTAuth::user();
+
+    // Si les identifiants sont corrects, renvoyer le token JWT et les informations de l'utilisateur
+    return response()->json([
+        'message' => 'Connexion réussie.',
+        'token' => $token,
+        'user' => $user // Retourne les détails de l'utilisateur connecté
+    ]);
+}
+
 
     /*Obtenir les informations du profil de l'utilisateur connecté.*/
     public function profile()
@@ -178,7 +203,7 @@ public function destroy(User $user)
 /* Méthode pour récupérer les représentants */
 public function getRepresentants()
 {
-    $representants = User::where('role', 'representant')->get();
+    $representants = User::where('role', 'representant')->with('boutique')->get();
     return response()->json($representants, 200);
 }
 

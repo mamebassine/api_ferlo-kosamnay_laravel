@@ -133,4 +133,4 @@ namespace App\Http\Controllers\Annotations ;
 
 */
 
- class GestiondesadressesAnnotationController {}
+ class GestiondesregionsAnnotationController {}

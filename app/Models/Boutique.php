@@ -18,7 +18,7 @@ class Boutique extends Model
      */
     public function adresse()
     {
-        return $this->belongsTo(adresse::class); // belongsTo: Une boutique appartient à une région.
+        return $this->belongsTo(region::class); // belongsTo: Une boutique appartient à une région.
     }
 
     /**

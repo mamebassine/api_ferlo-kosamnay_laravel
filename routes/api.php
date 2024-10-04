@@ -13,7 +13,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProduitBoutiqueController;
 use App\Http\Controllers\LigneCommandeController;
 use App\Http\Controllers\EmailController;
-
+use App\Http\Controllers\RegionController;
 
 // Opérations CRUD standard pour les utilisateurs
     Route::apiResource('users', UserController::class);
@@ -93,7 +93,7 @@ Route::apiResource('produits', ProduitController::class);
 Route::apiResource('boutiques', controller: BoutiqueController::class);
 
 // Routes pour les adresse
-Route::apiResource('adresses', controller: adresseController::class);
+Route::apiResource('regions', controller: RegionController::class);
 Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 
 Route::apiResource('notifications', NotificationController::class);

@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\adresse;
+use App\Models\region;
 use Illuminate\Http\Request;
 
-class adresseController extends Controller
+class RegionController extends Controller
 {
     // Liste toutes les régions
     public function index()
     {
-        $adresses = adresse::all();
-        return response()->json($adresses, 200); // Spécification du code 200
+        $regions = region::all();
+        return response()->json($regions, 200); // Spécification du code 200
     }
 
     // Affiche une région spécifique
     public function show($id)
     {
-        $adresse = adresse::find($id);
+        $region = region::find($id);
         
-        if (!$adresse) {
+        if (!$region) {
             return response()->json(['message' => 'Région non trouvée'], 404);
         }
 
-        return response()->json($adresse, 200);
+        return response()->json($region, 200);
     }
 
     // Crée une nouvelle région
@@ -35,9 +35,9 @@ class adresseController extends Controller
         ]);
 
         // Création de la région
-        $adresse = adresse::create($request->only('nom'));
+        $region = region::create($request->only('nom'));
 
-        return response()->json($adresse, 201);
+        return response()->json($region, 201);
     }
 
     // Met à jour une région existante
@@ -48,28 +48,28 @@ class adresseController extends Controller
             'nom' => 'required|string|max:255',
         ]);
 
-        $adresse = adresse::find($id);
+        $region = region::find($id);
         
-        if (!$adresse) {
+        if (!$region) {
             return response()->json(['message' => 'Région non trouvée'], 404);
         }
 
         // Mise à jour du nom de la région
-        $adresse->update($request->only('nom'));
+        $region->update($request->only('nom'));
 
-        return response()->json($adresse, 200);
+        return response()->json($region, 200);
     }
 
     // Supprime une région
     public function destroy($id)
     {
-        $adresse = adresse::find($id);
+        $region = region::find($id);
 
-        if (!$adresse) {
+        if (!$region) {
             return response()->json(['message' => 'Région non trouvée'], 404);
         }
 
-        $adresse->delete();
+        $region->delete();
 
         return response()->json(['message' => 'Région supprimée avec succès'], 200);
     }
