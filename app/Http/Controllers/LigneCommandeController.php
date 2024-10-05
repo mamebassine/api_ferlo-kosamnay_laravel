@@ -51,7 +51,7 @@ class LigneCommandeController extends Controller
         $request->validate([
             'produit_boutique_id' => 'required|exists:produit_boutique,id', 
             'quantite_totale' => 'required|integer|min:1', 
-            'prix_totale' => 'required|numeric' 
+            'prix_totale' => 'required|numeric'
         ]);
     
         // Crée une nouvelle ligne de commande
@@ -64,13 +64,18 @@ class LigneCommandeController extends Controller
             'prix_totale' => $request->input('prix_totale')
         ]);
     
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
+    
         try {
-            // Récupérer tous les utilisateurs avec le rôle 'representant'
-            $representants = User::where('role', 'representant')->get();
+            // Récupérer les utilisateurs avec le rôle 'representant' et la même adresse email que l'utilisateur connecté
+            $representants = User::where('role', 'representant')
+                                ->where('adresse', $user->adresse) // Filtrer par email identique
+                                ->get();
     
             // Vérifier s'il y a des représentants avant d'envoyer des emails
             if ($representants->isEmpty()) {
-                return response()->json(['error' => 'Aucun représentant trouvé'], 404);
+                return response()->json(['error' => 'Aucun représentant trouvé avec cette adresse '], 404);
             }
     
             // Envoyer un email à chaque représentant
@@ -80,6 +85,7 @@ class LigneCommandeController extends Controller
     
             // Retourner une réponse de succès si tous les emails sont envoyés
             return response()->json(['success' => 'Emails envoyés avec succès'], 200);
+    
         } catch (\Exception $e) {
             // Enregistrer les détails de l'erreur dans les logs
             Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage(), [
@@ -94,6 +100,7 @@ class LigneCommandeController extends Controller
             ], 500);
         }
     }
+    
     
     /*Met à jour une ligne de commande existante.
      */
