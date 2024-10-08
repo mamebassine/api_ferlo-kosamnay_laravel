@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Region;
+use App\Models\region;
 use Illuminate\Http\Request;
 
 class RegionController extends Controller
@@ -10,14 +10,14 @@ class RegionController extends Controller
     // Liste toutes les régions
     public function index()
     {
-        $regions = Region::all();
+        $regions = region::all();
         return response()->json($regions, 200); // Spécification du code 200
     }
 
     // Affiche une région spécifique
     public function show($id)
     {
-        $region = Region::find($id);
+        $region = region::find($id);
         
         if (!$region) {
             return response()->json(['message' => 'Région non trouvée'], 404);
@@ -35,7 +35,7 @@ class RegionController extends Controller
         ]);
 
         // Création de la région
-        $region = Region::create($request->only('nom'));
+        $region = region::create($request->only('nom'));
 
         return response()->json($region, 201);
     }
@@ -48,7 +48,7 @@ class RegionController extends Controller
             'nom' => 'required|string|max:255',
         ]);
 
-        $region = Region::find($id);
+        $region = region::find($id);
         
         if (!$region) {
             return response()->json(['message' => 'Région non trouvée'], 404);
@@ -63,7 +63,7 @@ class RegionController extends Controller
     // Supprime une région
     public function destroy($id)
     {
-        $region = Region::find($id);
+        $region = region::find($id);
 
         if (!$region) {
             return response()->json(['message' => 'Région non trouvée'], 404);

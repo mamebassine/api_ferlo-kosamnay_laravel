@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Mail\CommandePayee; // Import du Mailable CommandePayee
+use Illuminate\Support\Facades\Mail; // Import de la façade Mail
+use App\Mail\CommandeConfirmee; // Import du Mailable CommandeConfirmee
 use App\Models\LigneCommande; // Assurez-vous que le modèle LigneCommande est créé
 use App\Models\ProduitBoutique; // Assurez-vous que le modèle ProduitBoutique est créé
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail; // Import de la façade Mail
-use App\Mail\CommandePayee; // Import du Mailable CommandePayee
-use App\Mail\CommandeConfirmee; // Import du Mailable CommandeConfirmee
-use Illuminate\Support\Facades\Log;
 
 class LigneCommandeController extends Controller
 {
@@ -48,9 +49,9 @@ class LigneCommandeController extends Controller
     
         // Valide les données de la requête avant de créer la ligne de commande
         $request->validate([
-            'produit_boutique_id' => 'required|exists:produit_boutique,id', 
+            'produit_boutique_id' => 'required|integer', 
             'quantite_totale' => 'required|integer|min:1', 
-            'prix_totale' => 'required|numeric' 
+            'prix_totale' => 'required|numeric'
         ]);
     
         // Crée une nouvelle ligne de commande
@@ -63,15 +64,43 @@ class LigneCommandeController extends Controller
             'prix_totale' => $request->input('prix_totale')
         ]);
     
-        try {
-            Mail::to($request->user()->email)->send(new CommandeConfirmee($ligneCommande));
-        } catch (\Exception $e) {
-            Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage());
-            return response()->json(['error' => 'Erreur lors de l\'envoi de l\'email'], 500);
-        }
+        // Récupérer l'utilisateur connecté
+        $user = Auth::user();
     
-        return response()->json($ligneCommande, 201);
+        try {
+            // Récupérer les utilisateurs avec le rôle 'representant' et la même adresse email que l'utilisateur connecté
+            $representants = User::where('role', 'representant')
+                                ->where('adresse', $user->adresse) // Filtrer par email identique
+                                ->get();
+    
+            // Vérifier s'il y a des représentants avant d'envoyer des emails
+            if ($representants->isEmpty()) {
+                return response()->json(['error' => 'Aucun représentant trouvé avec cette adresse '], 404);
+            }
+    
+            // Envoyer un email à chaque représentant
+            foreach ($representants as $representant) {
+                Mail::to($representant->email)->send(new CommandeConfirmee($ligneCommande));
+            }
+    
+            // Retourner une réponse de succès si tous les emails sont envoyés
+            return response()->json(['success' => 'Emails envoyés avec succès'], 200);
+    
+        } catch (\Exception $e) {
+            // Enregistrer les détails de l'erreur dans les logs
+            Log::error('Erreur d\'envoi d\'email: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString(),
+            ]);
+    
+            // Afficher le message d'erreur exact (à utiliser uniquement en développement)
+            return response()->json([
+                'error' => 'Erreur lors de l\'envoi de l\'email',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
+    
     
     /*Met à jour une ligne de commande existante.
      */

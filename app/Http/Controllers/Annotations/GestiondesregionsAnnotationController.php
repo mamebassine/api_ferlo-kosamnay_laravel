@@ -26,7 +26,7 @@ namespace App\Http\Controllers\Annotations ;
  *
 
  * @OA\GET(
- *     path="/api/regions",
+ *     path="/api/adresses",
  *     summary="Afficher la liste",
  *     description="",
  *         security={
@@ -37,12 +37,12 @@ namespace App\Http\Controllers\Annotations ;
  * @OA\Response(response="500", description="Internal Server Error"),
  *     @OA\Parameter(in="header", name="User-Agent", required=false, @OA\Schema(type="string")
  * ),
- *     tags={"Gestion des regions"},
+ *     tags={"Gestion des adresses"},
 *),
 
 
  * @OA\POST(
- *     path="/api/regions",
+ *     path="/api/adresses",
  *     summary="Ajouter",
  *     description="",
  *         security={
@@ -66,12 +66,12 @@ namespace App\Http\Controllers\Annotations ;
  *             ),
  *         ),
  *     ),
- *     tags={"Gestion des regions"},
+ *     tags={"Gestion des adresses"},
 *),
 
 
  * @OA\GET(
- *     path="/api/regions/8",
+ *     path="/api/adresses/8",
  *     summary="Voir detail",
  *     description="",
  *         security={
@@ -82,12 +82,12 @@ namespace App\Http\Controllers\Annotations ;
  * @OA\Response(response="500", description="Internal Server Error"),
  *     @OA\Parameter(in="header", name="User-Agent", required=false, @OA\Schema(type="string")
  * ),
- *     tags={"Gestion des regions"},
+ *     tags={"Gestion des adresses"},
 *),
 
 
  * @OA\DELETE(
- *     path="/api/regions/3",
+ *     path="/api/adresses/3",
  *     summary="Supprimer",
  *     description="",
  *         security={
@@ -99,12 +99,12 @@ namespace App\Http\Controllers\Annotations ;
  * @OA\Response(response="404", description="Not Found"),
  *     @OA\Parameter(in="header", name="User-Agent", required=false, @OA\Schema(type="string")
  * ),
- *     tags={"Gestion des regions"},
+ *     tags={"Gestion des adresses"},
 *),
 
 
  * @OA\PUT(
- *     path="/api/regions/11",
+ *     path="/api/adresses/11",
  *     summary="Modifier",
  *     description="",
  *         security={
@@ -127,7 +127,7 @@ namespace App\Http\Controllers\Annotations ;
  *             ),
  *         ),
  *     ),
- *     tags={"Gestion des regions"},
+ *     tags={"Gestion des adresses"},
 *),
 
 

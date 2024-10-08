@@ -22,6 +22,8 @@ class UserController extends Controller
             'nom_complet' => 'required|string|max:255',  // Le nom complet est obligatoire, de type string, et ne peut pas dépasser 255 caractères
             'telephone' => 'required|string|max:15',  // Le numéro de téléphone est obligatoire et limité à 15 caractères
             'email' => 'required|string|email|max:255|unique:users',  // L'email est obligatoire, doit être unique et ne peut pas dépasser 255 caractères
+            'adresse' => 'required|string|max:255',  // Le nom complet est obligatoire, de type string, et ne peut pas dépasser 255 caractères
+
             'password' => 'required|string|min:6|confirmed',  // Le mot de passe est obligatoire, doit faire au moins 6 caractères et être confirmé
         ]);
 
@@ -35,6 +37,8 @@ class UserController extends Controller
             'nom_complet' => $request->nom_complet,  // Nom de l'utilisateur
             'telephone' => $request->telephone,  // Téléphone de l'utilisateur
             'email' => $request->email,  // Email de l'utilisateur
+            'adresse' => $request->adresse,  // Nom de l'utilisateur
+
             'password' => Hash::make($request->password),  // Hashage du mot de passe avant stockage pour plus de sécurité
             'role' => 'client',  // Rôle par défaut de l'utilisateur, ici "client"
         ]);
@@ -52,24 +56,49 @@ class UserController extends Controller
     }
 
     /*Connexion d'un utilisateur.*/
-    public function login(Request $request)
-    {
-        // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
-        $credentials = $request->only('email', 'password');
+    // public function login(Request $request)
+    // {
+    //     // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
+    //     $credentials = $request->only('email', 'password');
 
-        // Vérification des identifiants avec JWT. Si incorrects, renvoyer une erreur 401
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Identifiants invalides'], 401);
-        }
+    //     // Vérification des identifiants avec JWT. Si incorrects, renvoyer une erreur 401
+    //     if (!$token = JWTAuth::attempt($credentials)) {
+    //         return response()->json(['error' => 'Identifiants invalides'], 401);
+    //     }
 
-        // // Si les identifiants sont corrects, renvoyer le token JWT
-        // return response()->json(compact('token'));
+    //     // // Si les identifiants sont corrects, renvoyer le token JWT
+    //     // return response()->json(compact('token'));
 
-        return response()->json([
-            'message' => 'Connexion réussie.',
-            'token' => $token
-        ]);
+    //     return response()->json([
+    //         'message' => 'Connexion réussie.',
+    //         'token' => $token
+    //     ]);
+    // }
+
+
+
+    /* Connexion d'un utilisateur. */
+public function login(Request $request)
+{
+    // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
+    $credentials = $request->only('email', 'password');
+
+    // Vérification des identifiants avec JWT. Si incorrects, renvoyer une erreur 401
+    if (!$token = JWTAuth::attempt($credentials)) {
+        return response()->json(['error' => 'Identifiants invalides'], 401);
     }
+
+    // Récupération de l'utilisateur authentifié
+    $user = JWTAuth::user();
+
+    // Si les identifiants sont corrects, renvoyer le token JWT et les informations de l'utilisateur
+    return response()->json([
+        'message' => 'Connexion réussie.',
+        'token' => $token,
+        'user' => $user // Retourne les détails de l'utilisateur connecté
+    ]);
+}
+
 
     /*Obtenir les informations du profil de l'utilisateur connecté.*/
     public function profile()
@@ -116,6 +145,8 @@ class UserController extends Controller
         'nom_complet' => 'required|string|max:255',
         'telephone' => 'required|string|max:15',
         'email' => 'required|string|email|max:255|unique:users',
+        'adresse' => 'required|string|max:255',
+
         'password' => 'required|string|min:6|confirmed',
     ]);
 
@@ -126,6 +157,8 @@ class UserController extends Controller
     // Création du représentant
     $representant = User::create([
         'nom_complet' => $request->nom_complet,
+        'adresse' => $request->adresse,
+
         'telephone' => $request->telephone,
         'email' => $request->email,
         'password' => Hash::make($request->password),
@@ -138,6 +171,47 @@ class UserController extends Controller
         'message' => 'Représentant ajouté avec succès.',
         'representant' => $representant
     ], 201);
+    // // Envoyer un e-mail avec les identifiants
+    // $user->notify(new UserCreatedNotification($user->email, $request->password));
+
+    // return response()->json(['message' => 'User created successfully', 'user' => $user]);
 }
 
+
+
+
+// Méthode pour récupérer tous les utilisateurs
+public function index()
+{
+    $users = User::all();
+    return response()->json($users, 200); 
+}
+
+// Méthode pour afficher les détails d'un utilisateur spécifique
+public function show(User $user)
+{
+    return response()->json($user, 200);
+}
+
+/* Méthode pour supprimer un utilisateur */
+public function destroy(User $user)
+{
+    $user->delete();
+    return response()->json(null, 204);
+}
+
+/* Méthode pour récupérer les représentants */
+public function getRepresentants()
+{
+    $representants = User::where('role', 'representant')->with('boutique')->get();
+    return response()->json($representants, 200);
+}
+
+/* Méthode pour récupérer les clients */
+public function getClients()
+{
+    $clients = User::where('role', 'client')->get();
+    return response()->json($clients, 200);
+}
+    
 }

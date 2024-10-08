@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\Region;
+use App\Models\adresse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\RegionController;
+use App\Http\Controllers\adresseController;
 use App\Http\Controllers\ProduitController;
 use App\Http\Controllers\BoutiqueController;
 use App\Http\Controllers\CategorieController;
@@ -13,6 +13,20 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProduitBoutiqueController;
 use App\Http\Controllers\LigneCommandeController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\RegionController;
+
+// Opérations CRUD standard pour les utilisateurs
+    Route::apiResource('users', UserController::class);
+
+    // Routes personnalisées pour récupérer les représentants et les clients
+    Route::get('representants', [UserController::class, 'getRepresentants']);
+    Route::get('clients', [UserController::class, 'getClients']);
+
+    // // Route pour ajouter un représentant (accessible uniquement aux administrateurs)
+    // Route::middleware(['admin'])->post('representants', [UserController::class, 'addRepresentant']);
+
+
+
 
 
 
@@ -49,7 +63,7 @@ Route::middleware(['jwt.auth'])->group(function () {
 //     // Routes pour les boutiques
 //     Route::apiResource('boutiques', controller: BoutiqueController::class);
 //     // Routes pour les boutiques
-//     Route::apiResource('regions', controller: RegionController::class);
+//     Route::apiResource('adresses', controller: adresseController::class);
 //     Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 //     Route::apiResource('notifications', NotificationController::class);
 
@@ -78,7 +92,7 @@ Route::apiResource('produits', ProduitController::class);
 // Routes pour les boutiques
 Route::apiResource('boutiques', controller: BoutiqueController::class);
 
-// Routes pour les REGION
+// Routes pour les adresse
 Route::apiResource('regions', controller: RegionController::class);
 Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 

@@ -31,4 +31,7 @@ class Produit extends Model
                     ->withPivot('quantite') // Définit la quantité de produit dans chaque boutique via la table pivot
                     ->withTimestamps(); // Gère les colonnes created_at et updated_at de la table pivot.
     }
+    public function produitBoutique(){
+        return $this->hasMany(ProduitBoutique::class);
+    }
 }

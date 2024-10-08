@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Crée la table "regions" avec les colonnes id et nom
-    Schema::create('regions', function (Blueprint $table) {
+        // Crée la table "adresses" avec les colonnes id et nom
+    Schema::create('adresses', function (Blueprint $table) {
         $table->id();  // Clé primaire
         $table->string('nom')->unique();  // Nom de la région
         $table->timestamps();  // Colonnes de date
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('regions');
+        Schema::dropIfExists('adresses');
     }
 };

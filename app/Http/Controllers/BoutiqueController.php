@@ -11,8 +11,8 @@ class BoutiqueController extends Controller
     // GET : Liste toutes les boutiques
     public function index()
     {
-        // return response()->json(Boutique::with('region', 'produits')->get(), 200);
-        $boutiques = Boutique::with('region', 'produits', 'user')->get();
+        // return response()->json(Boutique::with('adresse', 'produits')->get(), 200);
+        $boutiques = Boutique::with('adresse', 'produits', 'user')->get();
         return response()->json(['boutiques' => $boutiques], 200);
     }
 
@@ -23,8 +23,8 @@ class BoutiqueController extends Controller
             'nom' => 'required|string|max:255',
             'adresse' => 'required|string',
             'telephone' => 'required|string',
-            'region_id' => 'required|exists:regions,id',
-            'user_id' => 'nullable|exists:regions,id',
+            'adresse_id' => 'required|exists:adresses,id',
+            'user_id' => 'nullable|exists:adresses,id',
 
         ]);
 
@@ -41,10 +41,10 @@ class BoutiqueController extends Controller
     // GET : Affiche une boutique spécifique
     public function show($id)
     {
-        // $boutique = Boutique::with('region', 'produits')->findOrFail($id);
+        // $boutique = Boutique::with('adresse', 'produits')->findOrFail($id);
         // return response()->json($boutique, 200);
 
-        $boutique = Boutique::with('region', 'produits')->findOrFail($id);
+        $boutique = Boutique::with('adresse', 'produits')->findOrFail($id);
         return response()->json(['boutique' => $boutique], 200);
     }
 
@@ -57,8 +57,8 @@ class BoutiqueController extends Controller
             'nom' => 'nullable|string|max:255',
             'adresse' => 'nullable|string',
             'telephone' => 'nullable|string',
-            'region_id' => 'nullable|exists:regions,id',
-            'user_id' => 'nullable|exists:regions,id',
+            'adresse_id' => 'nullable|exists:adresses,id',
+            'user_id' => 'nullable|exists:adresses,id',
 
         ]);
 
