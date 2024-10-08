@@ -12,7 +12,7 @@ class ProduitController extends Controller // Déclaration de la classe ProduitC
     public function index()
     {
         // Récupère tous les produits avec leurs catégories et boutiques associées et renvoie une réponse JSON
-        return response()->json(Produit::with('categorie', 'boutiques')->get(), 200);
+        return response()->json(Produit::with('categorie', 'boutiques','produitBoutique')->get(), 200);
     }
 
     // POST : Crée un nouveau produit
@@ -42,7 +42,7 @@ class ProduitController extends Controller // Déclaration de la classe ProduitC
     public function show($id)
     {
         // Récupère un produit spécifique avec ses catégories et boutiques associées ou lance une exception si non trouvé
-        $produit = Produit::with('categorie', 'boutiques')->findOrFail($id);
+        $produit = Produit::with('categorie', 'boutiques','produitBoutique')->findOrFail($id);
         // Renvoie le produit trouvé avec un statut 200 (OK)
         return response()->json($produit, 200);
     }

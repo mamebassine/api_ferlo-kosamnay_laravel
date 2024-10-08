@@ -49,7 +49,7 @@ class LigneCommandeController extends Controller
     
         // Valide les données de la requête avant de créer la ligne de commande
         $request->validate([
-            'produit_boutique_id' => 'required|exists:produit_boutique,id', 
+            'produit_boutique_id' => 'required|integer', 
             'quantite_totale' => 'required|integer|min:1', 
             'prix_totale' => 'required|numeric'
         ]);
