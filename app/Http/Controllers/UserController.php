@@ -19,12 +19,12 @@ class UserController extends Controller
     {
         // Validation des données de la requête
         $validator = Validator::make($request->all(), [
-            'nom_complet' => 'required|string|max:255',  // Le nom complet est obligatoire, de type string, et ne peut pas dépasser 255 caractères
-            'telephone' => 'required|string|max:15',  // Le numéro de téléphone est obligatoire et limité à 15 caractères
-            'email' => 'required|string|email|max:255|unique:users',  // L'email est obligatoire, doit être unique et ne peut pas dépasser 255 caractères
+            'nom_complet' => 'required|string|max:255',  
+            'telephone' => 'required|string|max:15',  
+            'email' => 'required|string|email|max:255|unique:users',
             'adresse' => 'required|string|max:255',  // Le nom complet est obligatoire, de type string, et ne peut pas dépasser 255 caractères
 
-            'password' => 'required|string|min:6|confirmed',  // Le mot de passe est obligatoire, doit faire au moins 6 caractères et être confirmé
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         // Si la validation échoue, renvoyer les erreurs en réponse JSON avec un code 400

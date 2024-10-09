@@ -22,10 +22,9 @@ class LigneCommandeController extends Controller
         if (!$request->user()) {
             return response()->json(['error' => 'Utilisateur non authentifié'], 401); //Retourne une erreur si non authentifié
         }
-        Log::info($request->user());
+
 
         $user = $request->user(); // Récupère l'utilisateur connecté
-
         // Récupérer toutes les lignes de commande associées à cet utilisateur
         // $lignesCommandes = LigneCommande::where('user_id', $user->id)->with(relations: 'produit')->get();
 
@@ -101,8 +100,8 @@ class LigneCommandeController extends Controller
         }
     }
     
-    
-    /*Met à jour une ligne de commande existante.
+
+/*Met à jour une ligne de commande existante.
      */
     public function update(Request $request, $id)
     {
