@@ -55,29 +55,8 @@ class UserController extends Controller
         ], 201);
     }
 
-    /*Connexion d'un utilisateur.*/
-    // public function login(Request $request)
-    // {
-    //     // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
-    //     $credentials = $request->only('email', 'password');
-
-    //     // Vérification des identifiants avec JWT. Si incorrects, renvoyer une erreur 401
-    //     if (!$token = JWTAuth::attempt($credentials)) {
-    //         return response()->json(['error' => 'Identifiants invalides'], 401);
-    //     }
-
-    //     // // Si les identifiants sont corrects, renvoyer le token JWT
-    //     // return response()->json(compact('token'));
-
-    //     return response()->json([
-    //         'message' => 'Connexion réussie.',
-    //         'token' => $token
-    //     ]);
-    // }
-
-
-
-    /* Connexion d'un utilisateur. */
+    
+/* Connexion d'un utilisateur. */
 public function login(Request $request)
 {
     // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
@@ -95,7 +74,8 @@ public function login(Request $request)
     return response()->json([
         'message' => 'Connexion réussie.',
         'token' => $token,
-        'user' => $user // Retourne les détails de l'utilisateur connecté
+        'user' => $user, // Retourne les détails de l'utilisateur connecté
+        'role' => $user->role,
     ]);
 }
 
@@ -133,6 +113,9 @@ public function login(Request $request)
         // Renvoyer le nouveau token en réponse JSON
         return response()->json(compact('token'));
     }
+
+
+
 
     /* Ajout d'un représentant par l'administrateur. */
 
@@ -176,6 +159,8 @@ public function login(Request $request)
 
     // return response()->json(['message' => 'User created successfully', 'user' => $user]);
 }
+
+
 
 
 
