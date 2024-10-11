@@ -120,45 +120,31 @@ public function login(Request $request)
     /* Ajout d'un représentant par l'administrateur. */
 
     public function addRepresentant(Request $request)
-{
-    $this->authorize('admin'); // Vérifiez si l'utilisateur a le rôle d'administrateur
-
-    // Validation des données
-    $validator = Validator::make($request->all(), [
-        'nom_complet' => 'required|string|max:255',
-        'telephone' => 'required|string|max:15',
-        'email' => 'required|string|email|max:255|unique:users',
-        'adresse' => 'required|string|max:255',
-
-        'password' => 'required|string|min:6|confirmed',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 400);
+    {
+        $validatedData = $request->validate([
+            'nom_complet' => 'required|string|max:255',
+            'adresse' => 'required|string|max:255',
+            'telephone' => 'required|string|max:20',
+            'email' => 'required|email|unique:users,email|max:255',
+            'password' => 'required|string|min:8', // Assurez-vous que 'password_confirmation' est présent
+        ]);
+    
+        // Création du représentant
+        $representant = User::create([
+            'nom_complet' => $validatedData['nom_complet'],
+            'adresse' => $validatedData['adresse'],
+            'telephone' => $validatedData['telephone'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+            'role' => 'representant',
+        ]);
+    
+        return response()->json([
+            'message' => 'Représentant ajouté avec succès.',
+            'representant' => $representant
+        ], 201);
     }
-
-    // Création du représentant
-    $representant = User::create([
-        'nom_complet' => $request->nom_complet,
-        'adresse' => $request->adresse,
-
-        'telephone' => $request->telephone,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => 'representant',
-    ]);
-
-    // return response()->json($representant, 201);
-
-    return response()->json([
-        'message' => 'Représentant ajouté avec succès.',
-        'representant' => $representant
-    ], 201);
-    // // Envoyer un e-mail avec les identifiants
-    // $user->notify(new UserCreatedNotification($user->email, $request->password));
-
-    // return response()->json(['message' => 'User created successfully', 'user' => $user]);
-}
+    
 
 
 

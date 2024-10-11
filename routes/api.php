@@ -15,14 +15,14 @@ use App\Http\Controllers\LigneCommandeController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\RegionController;
 
-// Opérations CRUD standard pour les utilisateurs
+// les utilisateurs
     Route::apiResource('users', UserController::class);
 
     // Routes personnalisées pour récupérer les représentants et les clients
-    Route::get('representants', [UserController::class, 'getRepresentants']);
+    Route::post('representant', [UserController::class, 'addRepresentant']);
     Route::get('clients', [UserController::class, 'getClients']);
 
-    // // Route pour ajouter un représentant (accessible uniquement aux administrateurs)
+    // // // Route pour ajouter un représentant (accessible uniquement aux administrateurs)
     // Route::middleware(['admin'])->post('representants', [UserController::class, 'addRepresentant']);
 
 
@@ -33,17 +33,19 @@ use App\Http\Controllers\RegionController;
 // Route pour l'inscription des clients
 Route::post('register', [UserController::class, 'register']);  
 Route::post('login', [UserController::class, 'login'])->name('login');
-// Route pour ajouter un représentant (accessible uniquement aux administrateurs)
-Route::middleware(['auth:api', 'admin'])->post('/representants', [UserController::class, 'addRepresentant']);
+
+// // Route pour ajouter un représentant (accessible uniquement aux administrateurs)
+// Route::middleware(['auth:api', 'admin'])->post('/representants', [UserController::class, 'addRepresentant']);
+
 // Deconnexion pour tous les utilisateurs
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 
-Route::middleware(['jwt.auth'])->group(function () {
-    Route::get('profile', [UserController::class, 'profile']);  
-    Route::post('refresh-token', [UserController::class, 'refreshToken']);
-    Route::post('logout', [UserController::class, 'logout']);
-});
+// Route::middleware(['jwt.auth'])->group(function () {
+//     Route::get('profile', [UserController::class, 'profile']);  
+//     Route::post('refresh-token', [UserController::class, 'refreshToken']);
+//     Route::post('logout', [UserController::class, 'logout']);
+// });
 
 
 // Route::post('logout', [UserController::class, 'logout'])->middleware('auth:api');
