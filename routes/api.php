@@ -85,9 +85,15 @@ Route::apiResource('lignes_commandes', LigneCommandeController::class);
 
 // Routes pour les catégories
 Route::apiResource('categories', CategorieController::class);
+
 // Routes pour les produits
-Route::apiResource('produits', ProduitController::class);
-// Route::put('produits/{id}', [ProduitController::class, 'update']);
+// Route::apiResource('produits', ProduitController::class);
+
+Route::get('produits', [ProduitController::class, 'index']);
+Route::post('produits', [ProduitController::class, 'store']);
+Route::post('produits/{produit}', [ProduitController::class, 'update']);
+Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
+Route::get('produits/{produit}', [ProduitController::class, 'show']);
 
 
 
@@ -108,7 +114,8 @@ Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerCon
 
 
 Route::middleware('jwt.auth')->group(function () {
-    Route::apiResource('lignes_commandes', LigneCommandeController::class);
+
+Route::apiResource('lignes_commandes', LigneCommandeController::class);
 
 Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
 Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
