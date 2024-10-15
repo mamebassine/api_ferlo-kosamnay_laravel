@@ -13,6 +13,7 @@ class User extends Authenticatable implements JWTSubject
 
     // Les champs qui peuvent être remplis en masse
     protected $fillable = ['nom_complet', 'telephone', 'adresse', 'email', 'password', 'role'];
+    
 
     // Méthodes requises par l'interface JWTSubject
     public function getJWTIdentifier()

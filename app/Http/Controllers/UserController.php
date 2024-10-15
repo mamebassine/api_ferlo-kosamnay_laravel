@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;  // Importation du modèle User
-use Illuminate\Http\Request;  // Importation de la classe Request pour manipuler les requêtes HTTP
-use Illuminate\Support\Facades\Hash;  // Importation pour le hachage des mots de passe
-use Illuminate\Support\Facades\Validator;  // Importation pour la validation des données
-use Tymon\JWTAuth\Facades\JWTAuth;  // Importation pour gérer l'authentification JWT
+use App\Models\User; 
+use Illuminate\Http\Request;  
+use Illuminate\Support\Facades\Hash;  
+use Illuminate\Support\Facades\Validator;  
+use Tymon\JWTAuth\Facades\JWTAuth;  
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Mail\RepresentantWelcomeMail;
+use Illuminate\Support\Facades\Mail;
+
+
 
 
 class UserController extends Controller
@@ -19,12 +23,12 @@ class UserController extends Controller
     {
         // Validation des données de la requête
         $validator = Validator::make($request->all(), [
-            'nom_complet' => 'required|string|max:255',  // Le nom complet est obligatoire, de type string, et ne peut pas dépasser 255 caractères
-            'telephone' => 'required|string|max:15',  // Le numéro de téléphone est obligatoire et limité à 15 caractères
-            'email' => 'required|string|email|max:255|unique:users',  // L'email est obligatoire, doit être unique et ne peut pas dépasser 255 caractères
+            'nom_complet' => 'required|string|max:255',  
+            'telephone' => 'required|string|max:15',  
+            'email' => 'required|string|email|max:255|unique:users',
             'adresse' => 'required|string|max:255',  // Le nom complet est obligatoire, de type string, et ne peut pas dépasser 255 caractères
 
-            'password' => 'required|string|min:6|confirmed',  // Le mot de passe est obligatoire, doit faire au moins 6 caractères et être confirmé
+            'password' => 'required|string|min:6|confirmed',
         ]);
 
         // Si la validation échoue, renvoyer les erreurs en réponse JSON avec un code 400
@@ -55,29 +59,8 @@ class UserController extends Controller
         ], 201);
     }
 
-    /*Connexion d'un utilisateur.*/
-    // public function login(Request $request)
-    // {
-    //     // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
-    //     $credentials = $request->only('email', 'password');
-
-    //     // Vérification des identifiants avec JWT. Si incorrects, renvoyer une erreur 401
-    //     if (!$token = JWTAuth::attempt($credentials)) {
-    //         return response()->json(['error' => 'Identifiants invalides'], 401);
-    //     }
-
-    //     // // Si les identifiants sont corrects, renvoyer le token JWT
-    //     // return response()->json(compact('token'));
-
-    //     return response()->json([
-    //         'message' => 'Connexion réussie.',
-    //         'token' => $token
-    //     ]);
-    // }
-
-
-
-    /* Connexion d'un utilisateur. */
+    
+/* Connexion d'un utilisateur. */
 public function login(Request $request)
 {
     // Récupération des informations d'identification de l'utilisateur (email et mot de passe)
@@ -95,7 +78,8 @@ public function login(Request $request)
     return response()->json([
         'message' => 'Connexion réussie.',
         'token' => $token,
-        'user' => $user // Retourne les détails de l'utilisateur connecté
+        'user' => $user, // Retourne les détails de l'utilisateur connecté
+        'role' => $user->role,
     ]);
 }
 
@@ -134,48 +118,66 @@ public function login(Request $request)
         return response()->json(compact('token'));
     }
 
-    /* Ajout d'un représentant par l'administrateur. */
+
+
+
+    // /* Ajout d'un représentant par l'administrateur. */
+
+    // public function addRepresentant(Request $request)
+    // {
+    //     $validatedData = $request->validate([
+    //         'nom_complet' => 'required|string|max:255',
+    //         'adresse' => 'required|string|max:255',
+    //         'telephone' => 'required|string|max:20',
+    //         'email' => 'required|email|unique:users,email|max:255',
+    //         'password' => 'required|string|min:8', // Assurez-vous que 'password_confirmation' est présent
+    //     ]);
+    
+    //     // Création du représentant
+    //     $representant = User::create([
+    //         'nom_complet' => $validatedData['nom_complet'],
+    //         'adresse' => $validatedData['adresse'],
+    //         'telephone' => $validatedData['telephone'],
+    //         'email' => $validatedData['email'],
+    //         'password' => Hash::make($validatedData['password']),
+    //         'role' => 'representant',
+    //     ]);
+    
+    //     return response()->json([
+    //         'message' => 'Représentant ajouté avec succès.',
+    //         'representant' => $representant
+    //     ], 201);
+    // }
+    
 
     public function addRepresentant(Request $request)
-{
-    $this->authorize('admin'); // Vérifiez si l'utilisateur a le rôle d'administrateur
-
-    // Validation des données
-    $validator = Validator::make($request->all(), [
-        'nom_complet' => 'required|string|max:255',
-        'telephone' => 'required|string|max:15',
-        'email' => 'required|string|email|max:255|unique:users',
-        'adresse' => 'required|string|max:255',
-
-        'password' => 'required|string|min:6|confirmed',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 400);
+    {
+        $validatedData = $request->validate([
+            'nom_complet' => 'required|string|max:255',
+            'adresse' => 'required|string|max:255',
+            'telephone' => 'required|string|max:20',
+            'email' => 'required|email|unique:users,email|max:255',
+            'password' => 'required|string|min:8',
+        ]);
+    
+        // Création du représentant
+        $representant = User::create([
+            'nom_complet' => $validatedData['nom_complet'],
+            'adresse' => $validatedData['adresse'],
+            'telephone' => $validatedData['telephone'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+            'role' => 'representant',
+        ]);
+    
+        // Envoyer un email au représentant
+        Mail::to($representant->email)->send(new RepresentantWelcomeMail($representant, $validatedData['password']));
+    
+        return response()->json([
+            'message' => 'Représentant ajouté avec succès et email envoyé.',
+            'representant' => $representant
+        ], 201);
     }
-
-    // Création du représentant
-    $representant = User::create([
-        'nom_complet' => $request->nom_complet,
-        'adresse' => $request->adresse,
-
-        'telephone' => $request->telephone,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'role' => 'representant',
-    ]);
-
-    // return response()->json($representant, 201);
-
-    return response()->json([
-        'message' => 'Représentant ajouté avec succès.',
-        'representant' => $representant
-    ], 201);
-    // // Envoyer un e-mail avec les identifiants
-    // $user->notify(new UserCreatedNotification($user->email, $request->password));
-
-    // return response()->json(['message' => 'User created successfully', 'user' => $user]);
-}
 
 
 

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         // Crée la table "adresses" avec les colonnes id et nom
-    Schema::create('adresses', function (Blueprint $table) {
+    Schema::create('regions', function (Blueprint $table) {
         $table->id();  // Clé primaire
         $table->string('nom')->unique();  // Nom de la région
         $table->timestamps();  // Colonnes de date

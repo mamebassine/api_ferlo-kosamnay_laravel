@@ -17,7 +17,7 @@ return new class extends Migration
         $table->string('nom');  // Nom de la boutique
         $table->string('adresse');  // adresse de la boutique
         $table->string('telephone');  // Téléphone de la boutique
-        $table->foreignId('adresse_id')->constrained('adresses')->onDelete('cascade');  // Clé étrangère vers la table "adresses" avec suppression en cascade
+        $table->foreignId('region_id')->constrained('regions')->onDelete('cascade');  // Clé étrangère vers la table "adresses" avec suppression en cascade
         $table->timestamps();  // Colonnes de date
     });
     }
