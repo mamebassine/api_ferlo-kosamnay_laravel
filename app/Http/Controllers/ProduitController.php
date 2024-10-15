@@ -19,9 +19,10 @@ class ProduitController extends Controller
     {
         $validatedData = $request->validate([
             'categorie_id' => 'required|exists:categories,id',
-            'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+           // 'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
 
-            // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
+            
             'description' => 'required|string',
             'prix' => 'required|numeric',
             'quantite' => 'required|integer',
@@ -63,7 +64,6 @@ class ProduitController extends Controller
     public function update(Request $request, $id)
     {
       
-        
         $produit = Produit::findOrFail($id);
 
         $validatedData = $request->validate([
@@ -72,6 +72,7 @@ class ProduitController extends Controller
 
             // 'image' => 'nullable|string',
      // 'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+     
            'description' => 'nullable|string',
             'prix' => 'nullable|numeric',
             'quantite' => 'nullable|integer',
@@ -98,9 +99,6 @@ class ProduitController extends Controller
         
     }
 
-    
-    
-    
     
     
     // DELETE : Supprime un produit et son image
