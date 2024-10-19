@@ -76,9 +76,9 @@ Route::post('/commandes', [CommandeController::class, 'store']);
 
 Route::middleware('jwt.auth')->group(function () {
 
-// Route::apiResource('lignes_commandes', LigneCommandeController::class);
+ Route::apiResource('lignes_commandes', LigneCommandeController::class);
 
-Route::post('lignes_commandesk', [LigneCommandeController::class,'store']);
+// Route::post('lignes_commandesk', [LigneCommandeController::class,'store']);
 
 
 

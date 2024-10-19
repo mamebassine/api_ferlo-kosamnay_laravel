@@ -27,7 +27,7 @@ class ProduitBoutique extends Model
     // Relation Many-to-Many avec LigneCommande via une table pivot "commande_produitboutique"
     public function ligneCommandes()
     {
-        return $this->belongsToMany(LigneCommande::class, 'commande_produitboutique', 'produit_boutique_id', 'ligne_commande_id')
+        return $this->belongsToMany(LigneCommande::class, 'commandes', 'produit_boutique_id', 'ligne_commande_id')
             ->withPivot('quantite', 'montant') // Champs supplémentaires dans la table pivot
             ->withTimestamps();
     }

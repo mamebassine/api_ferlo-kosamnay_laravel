@@ -32,5 +32,9 @@ class LigneCommande extends Model
         return $this->belongsToMany(ProduitBoutique::class, 'commandes', 'ligne_commande_id', 'produit_boutique_id')
             ->withPivot('quantite', 'montant'); // Include any pivot table fields
     }
+    public function produitBoutique()
+    {
+        return $this->belongsTo(ProduitBoutique::class, 'produit_boutique_id');
+    }
     
 }
