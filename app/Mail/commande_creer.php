@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CommandeConfirmee extends Mailable
+class commande_creer extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +30,7 @@ class CommandeConfirmee extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre commande a été confirmée', // Sujet de l'email
+            subject: 'Une commande a été créer', // Sujet de l'email
         );
     }
 
@@ -40,7 +40,7 @@ class CommandeConfirmee extends Mailable
     public function content(): Content
 {
     return new Content(
-        view: 'emails.commande_confirmee', // Utilisation d'une vue pour l'email
+        view: 'emails.commande_creer', // Utilisation d'une vue pour l'email
     );
 }
 

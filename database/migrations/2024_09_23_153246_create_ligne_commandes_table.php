@@ -13,10 +13,6 @@ return new class extends Migration
     {
         Schema::create('ligne_commandes', function (Blueprint $table) {
             $table->id();  // Clé primaire pour la table ligne_commandes
-            $table->foreignId('produit_boutique_id')  // Clé étrangère vers la table "produit_boutique"
-                ->constrained('produit_boutique')  // Définit la relation avec la table produit_boutique
-                ->onDelete('cascade');  // Supprime les lignes correspondantes en cas de suppression dans produit_boutique
-            
             $table->foreignId('user_id')  // Clé étrangère vers la table "users"
                 ->constrained('users')  // Définit la relation avec la table users
                 ->onDelete('cascade');  // Supprime les lignes correspondantes en cas de suppression dans users
