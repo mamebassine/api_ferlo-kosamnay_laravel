@@ -64,7 +64,7 @@ Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 Route::apiResource('notifications', NotificationController::class);
 
 Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
-Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
+//Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
 
 // 
 
@@ -125,23 +125,45 @@ Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerCon
 
 
 // });
+// Routes pour les paiements
+
+
+
+
+//Route::post('/paiement/initier/{ligneCommandeId}', [PaiementController::class, 'initierPaiement']);
+
+
 });
 
 
 
-Route::middleware('jwt.auth')->group(function () {
-    // Route pour créer un paiement
-    Route::post('/paiements', [PaiementController::class, 'createPayment']);
-
-    // Route pour obtenir tous les paiements
+Route::middleware('auth:api')->group(function () {
     Route::get('/paiements', [PaiementController::class, 'index']);
-
-    // Route pour obtenir un paiement par ID
+    Route::post('/paiements', [PaiementController::class, 'store']);
     Route::get('/paiements/{id}', [PaiementController::class, 'show']);
-
-    // Route pour mettre à jour un paiement
     Route::put('/paiements/{id}', [PaiementController::class, 'update']);
-
-    // Route pour supprimer un paiement
     Route::delete('/paiements/{id}', [PaiementController::class, 'destroy']);
+
+
 });
+
+
+// Route::middleware('jwt.auth')->group(function () {
+//     // Route pour créer un paiement
+//     Route::post('/paiements', [PaiementController::class, 'createPayment']);
+
+//     // Route pour obtenir tous les paiements
+//     Route::get('/paiements', [PaiementController::class, 'index']);
+
+//     // Route pour obtenir un paiement par ID
+//     Route::get('/paiements/{id}', [PaiementController::class, 'show']);
+
+//     // Route pour mettre à jour un paiement
+//     Route::put('/paiements/{id}', [PaiementController::class, 'update']);
+
+//     // Route pour supprimer un paiement
+//     Route::delete('/paiements/{id}', [PaiementController::class, 'destroy']);
+// });
+
+
+

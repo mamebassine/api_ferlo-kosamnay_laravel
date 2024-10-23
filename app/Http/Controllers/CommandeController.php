@@ -9,16 +9,14 @@ use Illuminate\Http\Request;
 
 class CommandeController extends Controller
 {
-    // Afficher toutes les commandes
-    // public function index()
-    // {
-    //     $commandes = Commande::with(['produitBoutique', 'ligneCommande'])->get();
-    //     return view('commandes.index', compact('commandes'));
-    // }
+    public function index()
+    {
+        $commandes = Commande::all();
+        return response()->json($commandes);
+    }
 
-    
-
-    // Afficher un formulaire pour créer une nouvelle commande
+   
+// Afficher un formulaire pour créer une nouvelle commande
     public function create()
     {
         $produits = ProduitBoutique::all();
@@ -29,12 +27,12 @@ class CommandeController extends Controller
     // Enregistrer une nouvelle commande
     public function store(Request $request)
     {
-        $request->validate([
-            'produit_boutique_id' => 'required',
-            'ligne_commande_id' => 'required',
-            'quantite' => 'required|integer',
-            'montant' => 'required|numeric',
-        ]);
+        // $request->validate([
+        //     'produit_boutique_id' => 'required',
+        //     'ligne_commande_id' => 'required',
+        //     'quantite' => 'required|integer',
+        //     'montant' => 'required|numeric',
+        // ]);
 
         Commande::create($request->all());
 

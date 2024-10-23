@@ -56,7 +56,11 @@ class LigneCommandeController extends Controller
         $statut = 'en attente';
     
         try {
-            DB::transaction(function () use ($request, $userId, $date, $statut) {
+            // Variable pour stocker la commande créée
+            $ligneCommande = null;
+    
+            // Utilisation d'une transaction pour garantir l'intégrité des données
+            DB::transaction(function () use ($request, $userId, $date, $statut, &$ligneCommande) {
                 // Crée une nouvelle ligne de commande unique
                 $ligneCommande = LigneCommande::create([
                     'user_id' => $userId,
@@ -94,7 +98,9 @@ class LigneCommandeController extends Controller
                 }
             });
     
-            return response()->json(['success' => 'Commande ajoutée avec succès et emails envoyés'], 200);
+            // Si tout s'est bien passé, retourne la commande créée
+            return response()->json(['success' => 'Commande ajoutée avec succès', 'commande' => $ligneCommande], 200);
+    
         } catch (\Exception $e) {
             Log::error('Erreur: ' . $e->getMessage(), [
                 'exception' => $e,
@@ -104,6 +110,7 @@ class LigneCommandeController extends Controller
             return response()->json(['error' => 'Erreur lors de l\'ajout de la commande', 'message' => $e->getMessage()], 500);
         }
     }
+    
     
     /**
      * Met à jour une ligne de commande existante.
