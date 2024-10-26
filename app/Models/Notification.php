@@ -15,7 +15,11 @@ class Notification extends Model
         'description',
         'lue',
     ];
-
+    protected $casts = [
+        'lue' => 'boolean',
+    ];
+    
+    
     public function user()
     {
         return $this->belongsTo(User::class); // Lien vers l'utilisateur

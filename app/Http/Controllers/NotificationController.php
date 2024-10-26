@@ -5,71 +5,50 @@ namespace App\Http\Controllers;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
-    /*Afficher la liste de toutes les notifications.
-     
-     */
     public function index()
     {
-        $notifications = Notification::all();
-        Log::info('Liste des notifications récupérée.');
-        return response()->json($notifications);
+            $userId = Auth::user()->id;
+            
+
+            // Récupérer toutes les notifications non lues pour l'utilisateur connecté
+            $notifications = Notification::where('user_id', $userId)      // Trier par date de création, les plus récentes en premier
+                                          ->get();
+
+            return response()->json([
+                    'status' => true,
+                    'data' => $notifications
+                ], 200);
+
     }
 
-    /*Stocker une nouvelle notification dans la base de données.
-     
-     */
-    public function store(Request $request)
+    public function markAsRead($id)
     {
-        // Valider les données de la requête
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id', // L'utilisateur doit exister
-            'objet' => 'required|string|max:255',
-            'description' => 'required|string',
-        ]);
-
-        // Créer la notification avec les données validées
-        $notification = Notification::create($validated);
-        Log::info('Nouvelle notification créée :', $validated);
-        return response()->json($notification, 201);
+        $notification = Notification::findOrFail($id);
+        $notification->update(['lue' => true]); // Marquer comme lue
+        
+        return response()->json(['message' => 'Notification marquée comme lue']);
     }
 
-    /* Afficher la notification spécifiée.
-   
-     */
-    public function show(Notification $notification)
-    {
-        Log::info('Notification récupérée :', ['id' => $notification->id]);
-        return response()->json($notification);
-    }
 
-    /* Mettre à jour la notification spécifiée.
-     
-     */
-    public function update(Request $request, Notification $notification)
-    {
-        // Valider les données de la requête
-        $validated = $request->validate([
-            'objet' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|required|string',
-            'lue' => 'sometimes|boolean',
-        ]);
+    // public function markAsRead($id)
+    // {
+    //     $user = Auth::id();
 
-        // Mettre à jour la notification avec les données validées
-        $notification->update($validated);
-        Log::info('Notification mise à jour :', ['id' => $notification->id]);
-        return response()->json($notification);
-    }
+    //     $notification = Notification::where('id', $id)
+    //         ->where('user_id', $user)
+    //         ->first();
 
-    /*Supprimer la notification spécifiée.
-     
-     */
-    public function destroy(Notification $notification)
-    {
-        $notification->delete();
-        Log::info('Notification supprimée :', ['id' => $notification->id]);
-        return response()->json(null, 204);
-    }
+    //     if ($notification) {
+    //         $notification->update(['lue' => true]);
+    //         return response()->json(['success' => true]);
+    //     }
+
+    //     return response()->json(['error' => 'Notification non trouvée'], 404);
+    // }
+
+    
 }

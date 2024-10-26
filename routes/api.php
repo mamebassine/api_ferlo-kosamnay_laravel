@@ -61,7 +61,10 @@ Route::apiResource('boutiques', controller: BoutiqueController::class);
 Route::apiResource('regions', controller: RegionController::class);
 Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 
-Route::apiResource('notifications', NotificationController::class);
+// Route::apiResource('notifications', NotificationController::class);
+
+    // Route::post('/notifications/{id}/mark-as-read', 'NotificationController@markAsRead');
+    // Route::post('/notifications/mark-all-as-read', 'NotificationController@markAllAsRead');
 
 Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
 //Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
@@ -75,6 +78,7 @@ Route::post('/commandes', [CommandeController::class, 'store']);
 
 
 Route::middleware('jwt.auth')->group(function () {
+   
 
  Route::apiResource('lignes_commandes', LigneCommandeController::class);
 
@@ -144,9 +148,10 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/paiements/{id}', [PaiementController::class, 'update']);
     Route::delete('/paiements/{id}', [PaiementController::class, 'destroy']);
 
-
+    Route::get('/notifications', [NotificationController::class, 'index']);
 });
 
+//Route::middleware('auth:api')->get('/notifications', [NotificationController::class, 'index']);
 
 // Route::middleware('jwt.auth')->group(function () {
 //     // Route pour créer un paiement

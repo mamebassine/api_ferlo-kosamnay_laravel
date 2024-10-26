@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Mail\CommandePayee;
 use App\Mail\Commande_creer;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\LigneCommande;
 use App\Models\ProduitBoutique;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use App\Notifications\NotificationRepresentant;
 
 class LigneCommandeController extends Controller
 {
@@ -95,6 +97,12 @@ class LigneCommandeController extends Controller
                 // Envoie un email à chaque représentant
                 foreach ($representants as $representant) {
                     Mail::to($representant->email)->send(new commande_creer($ligneCommande));
+                    Notification::create([
+                        'user_id' => $representant->id,
+                        'objet' => 'Nouvelle commande reçue', // Ajout de l'objet
+                        'description' => "Nouvelle commande de {$user->name} d'un montant de {$ligneCommande->prix_totale}CFA", // Ajout de la description
+                        'lue' => 0
+                    ]);
                 }
             });
     

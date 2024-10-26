@@ -19,12 +19,12 @@ class Commande extends Model
     // Dans le modèle Commande.php
 public function ligneCommande()
 {
-    return $this->belongsTo(LigneCommande::class, 'ligne_commande_id');
+    return $this->belongsTo(LigneCommande::class);
 }
 
 public function produitBoutique()
 {
-    return $this->belongsTo(ProduitBoutique::class, 'produit_boutique_id');
+    return $this->belongsTo(ProduitBoutique::class);
 }
 
 }

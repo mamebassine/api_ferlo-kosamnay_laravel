@@ -11,7 +11,7 @@ class CommandeController extends Controller
 {
     public function index()
     {
-        $commandes = Commande::all();
+        $commandes = Commande::with('produitBoutique.produit','ligneCommande')->get();
         return response()->json($commandes);
     }
 

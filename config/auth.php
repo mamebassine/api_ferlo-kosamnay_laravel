@@ -44,9 +44,9 @@ return [
         ],
 
         'api' => [
-            'driver' => 'jwt', // Utilisez le driver 'jwt' pour le guard API
-            'provider' => 'users',
-        ],
+        'driver' => 'jwt', // ou 'passport'/'sanctum' si vous utilisez Laravel Passport ou Sanctum
+        'provider' => 'users',
+    ],
     ],
 
     /*
