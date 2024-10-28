@@ -19,15 +19,21 @@ class ProduitController extends Controller
     {
         $validatedData = $request->validate([
             'categorie_id' => 'required|exists:categories,id',
-           // 'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
 
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
-            
-            'description' => 'required|string',
+        //'nom' => 'required|string',
+             'nom' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
+        // 'description' => 'required|string',
+        //'description' => ['nullable', 'string', 'max:255', 'regex:/^[\p{L}\s]*$/u'],
+        'description' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Zàâäéèêëîïôûù\s]*$/'],
+
+//  'nom_complet' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
+            //  'description' => ['nullable', 'string','max:255', 'regex:/^[a-zA-Z\s]*$/'],
+
+//'reference' => 'required|string|unique:produits,reference',
+            'reference' =>['required','string','regex:/^[0-9]{3}[A-Za-z]{3}$/','unique:produits,reference'], 
             'prix' => 'required|numeric',
             'quantite' => 'required|integer',
-            'reference' => 'required|string|unique:produits,reference',
-            'nom' => 'required|string',
         ]);
 
         // Traitement de l'image
@@ -73,11 +79,11 @@ class ProduitController extends Controller
             // 'image' => 'nullable|string',
      // 'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
      
-           'description' => 'nullable|string',
-            'prix' => 'nullable|numeric',
+     'description' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Zàâäéèêëîïôûù\s]*$/'],
+     'prix' => 'nullable|numeric',
             'quantite' => 'nullable|integer',
-            'reference' => 'nullable|string|unique:produits,reference,' . $produit->id,
-            'nom' => 'nullable|string',
+            'reference' =>['required','string','regex:/^[0-9]{3}[A-Za-z]{3}$/','unique:produits,reference'], 
+            'nom' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
             
         ]);
         // Traitement de l'image si une nouvelle image est uploadée
@@ -256,7 +262,3 @@ class ProduitController extends Controller
 //         return response()->json(['message' => 'Erreur lors de la suppression'], 500);
 //     }
 // }
-
-
-
-

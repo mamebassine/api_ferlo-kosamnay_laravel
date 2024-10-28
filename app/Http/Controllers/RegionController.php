@@ -31,7 +31,9 @@ class RegionController extends Controller
     {
         // Validation des données
         $request->validate([
-            'nom' => 'required|string|max:255',
+            'nom' =>['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
+
+            // 'nom' => 'required|string|max:255',
         ]);
 
         // Création de la région
@@ -45,7 +47,9 @@ class RegionController extends Controller
     {
         // Validation des données
         $request->validate([
-            'nom' => 'required|string|max:255',
+            // 'nom' => 'required|string|max:255',
+            'nom' =>['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
+
         ]);
 
         $region = region::find($id);

@@ -23,10 +23,16 @@ class UserController extends Controller
     {
         // Validation des données de la requête
         $validator = Validator::make($request->all(), [
-            'nom_complet' => 'required|string|max:255',  
-            'telephone' => 'required|string|max:15',  
+            // 'nom_complet' => 'required|string|max:255',  
+            'nom_complet' =>['required','string','max:15',  'regex:/^[a-zA-Z\s]*$/'],
+
+            // 'telephone' => 'required|string|max:15',  
+            'telephone' => ['required','regex:/^\+?[0-9]{8,20}$/'], // Doit être un numéro avec 8 à 20 chiffres, pouvant inclure un '+'.
+
+            
             'email' => 'required|string|email|max:255|unique:users',
-            'adresse' => 'required|string|max:255',  // Le nom complet est obligatoire, de type string, et ne peut pas dépasser 255 caractères
+            // 'adresse' => 'required|string|max:255',  // Le nom complet est obligatoire, de type string, et ne peut pas dépasser 255 caractères
+            'adresse' =>['required','string','max:15',  'regex:/^[a-zA-Z\s]*$/'],
 
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -153,12 +159,23 @@ public function login(Request $request)
     public function addRepresentant(Request $request)
     {
         $validatedData = $request->validate([
-            'nom_complet' => 'required|string|max:255',
-            'adresse' => 'required|string|max:255',
-            'telephone' => 'required|string|max:20',
+
+            'nom_complet' =>['required','string','max:15',  'regex:/^[a-zA-Z\s]*$/'],
+
+            //'nom_complet' => 'required|string|max:255',
+            // 'adresse' => 'required|string|max:255',
+            'adresse' =>['required','string','max:15',  'regex:/^[a-zA-Z\s]*$/'],
+
+            // 'telephone' => 'required|string|max:20',
+            
+           'telephone' => ['required','regex:/^\+?[0-9]{8,20}$/', // Doit être un numéro avec 8 à 20 chiffres, pouvant inclure un '+'.
+            'unique:users,telephone' // Le numéro de téléphone doit être unique dans la table 'users'.
+        ],
+
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8',
         ]);
+        
     
         // Création du représentant
         $representant = User::create([
@@ -203,11 +220,19 @@ public function destroy(User $user)
 }
 
 /* Méthode pour récupérer les représentants */
+// public function getRepresentants()
+// {
+//     $representants = User::where('role', 'representant')->with('boutique')->get();
+//     return response()->json($representants, 200);
+// }
+
 public function getRepresentants()
 {
-    $representants = User::where('role', 'representant')->with('boutique')->get();
+    $representants = User::where('role', 'representant')->get();
+    
     return response()->json($representants, 200);
 }
+
 
 /* Méthode pour récupérer les clients */
 public function getClients()

@@ -23,12 +23,19 @@ class CategorieController extends Controller
     {
         $request->validate([
             'image' => 'required|string',
-            'nom_complet' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
+            'nom_complet' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
+            'description' => ['nullable', 'string','max:255', 'regex:/^[a-zA-Z\s]*$/'],
+]);
 
         $categorie = Categorie::create($request->all());
-        return response()->json($categorie, 201);
+        return response()->json([
+            'message' => 'Catégorie créée avec succès',
+            'categorie' => $categorie
+        ], 201);
+        
+
+
+        // return response()->json($categorie, 201);
     }
 
     // Méthode pour afficher les détails d'une catégorie spécifique
@@ -53,10 +60,11 @@ public function update(Request $request, $id)
     // Valider les données envoyées dans la requête pour s'assurer que les champs sont corrects
     $validatedData = $request->validate([
         'image' => 'required|string',
-        'nom_complet' => 'required|string|max:255',  // Le nom complet est obligatoire et doit être une chaîne de caractères
-        'description' => 'nullable|string',  // La description est optionnelle mais doit être une chaîne si présente
+        'nom_complet' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
+        'description' => ['nullable', 'string','max:255', 'regex:/^[a-zA-Z\s]*$/'],
     ]);
 
+    
     // Rechercher la catégorie à partir de l'ID fourni
     $categorie = Categorie::find($id);
 
