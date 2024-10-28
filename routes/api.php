@@ -5,15 +5,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\adresseController;
-use App\Http\Controllers\ProduitController;
-use App\Http\Controllers\BoutiqueController;
-use App\Http\Controllers\CategorieController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ProduitBoutiqueController;
-use App\Http\Controllers\LigneCommandeController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\RegionController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProduitController;
+use App\Http\Controllers\BoutiqueController;
+use App\Http\Controllers\CommandeController;
+use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\CategorieController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\LigneCommandeController;
+use App\Http\Controllers\ProduitBoutiqueController;
+
 
 
 
@@ -37,7 +40,6 @@ Route::post('login', [UserController::class, 'login'])->name('login');
 // Deconnexion pour tous les utilisateurs
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-Route::apiResource('lignes_commandes', LigneCommandeController::class);
 
 // Routes pour les catégories
 Route::apiResource('categories', CategorieController::class);
@@ -59,17 +61,33 @@ Route::apiResource('boutiques', controller: BoutiqueController::class);
 Route::apiResource('regions', controller: RegionController::class);
 Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 
-Route::apiResource('notifications', NotificationController::class);
+// Route::apiResource('notifications', NotificationController::class);
+
+    // Route::post('/notifications/{id}/mark-as-read', 'NotificationController@markAsRead');
+    // Route::post('/notifications/mark-all-as-read', 'NotificationController@markAllAsRead');
 
 Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
-Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
+//Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
 
+// 
+
+// Ou, pour une API
+Route::apiResource('commandes', CommandeController::class);
+Route::post('/commandes', [CommandeController::class, 'store']);
 
 
 
 Route::middleware('jwt.auth')->group(function () {
+   
 
-Route::apiResource('lignes_commandes', LigneCommandeController::class);
+ Route::apiResource('lignes_commandes', LigneCommandeController::class);
+
+// Route::post('lignes_commandesk', [LigneCommandeController::class,'store']);
+
+
+
+
+
 
 
 
@@ -111,8 +129,46 @@ Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerCon
 
 
 // });
+// Routes pour les paiements
+
+
+
+
+//Route::post('/paiement/initier/{ligneCommandeId}', [PaiementController::class, 'initierPaiement']);
+
 
 });
+
+
+
+Route::middleware('auth:api')->group(function () {
+    Route::get('/paiements', [PaiementController::class, 'index']);
+    Route::post('/paiements', [PaiementController::class, 'store']);
+    Route::get('/paiements/{id}', [PaiementController::class, 'show']);
+    Route::put('/paiements/{id}', [PaiementController::class, 'update']);
+    Route::delete('/paiements/{id}', [PaiementController::class, 'destroy']);
+
+    Route::get('/notifications', [NotificationController::class, 'index']);
+});
+
+//Route::middleware('auth:api')->get('/notifications', [NotificationController::class, 'index']);
+
+// Route::middleware('jwt.auth')->group(function () {
+//     // Route pour créer un paiement
+//     Route::post('/paiements', [PaiementController::class, 'createPayment']);
+
+//     // Route pour obtenir tous les paiements
+//     Route::get('/paiements', [PaiementController::class, 'index']);
+
+//     // Route pour obtenir un paiement par ID
+//     Route::get('/paiements/{id}', [PaiementController::class, 'show']);
+
+//     // Route pour mettre à jour un paiement
+//     Route::put('/paiements/{id}', [PaiementController::class, 'update']);
+
+//     // Route pour supprimer un paiement
+//     Route::delete('/paiements/{id}', [PaiementController::class, 'destroy']);
+// });
 
 
 

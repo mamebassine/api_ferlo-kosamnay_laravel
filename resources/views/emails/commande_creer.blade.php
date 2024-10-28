@@ -9,13 +9,16 @@
 <body>
     <h1>Nouvelle Commande Reçue</h1>
     <p>Merci pour votre achat. Voici les détails de votre commande :</p>
+   
     <ul>
-        <li><strong>Produit :</strong> {{ $ligneCommande->produitBoutique->nom }}</li>
-        <li><strong>Quantité :</strong> {{ $ligneCommande->quantite_totale }}</li>
+        @foreach($ligneCommande->produitBoutiques as $produitBoutique)
+            <li><strong>Produit :</strong> {{ $produitBoutique->produit->nom ?? 'N/A' }}</li> <!-- Vérifie que le produit existe -->
+            <li><strong>Quantité :</strong> {{ $produitBoutique->pivot->quantite }}</li>
+            <li><strong>Prix Unitaire :</strong> {{ $produitBoutique->pivot->montant }} FCA</li>
+        @endforeach
         <li><strong>Prix Total :</strong> {{ $ligneCommande->prix_totale }} FCA</li>
         <li><strong>Date de Commande :</strong> {{ $ligneCommande->created_at->format('d/m/Y H:i') }}</li>
-
     </ul>
-    <p>Veuillez traiter cette commande dans les plus brefs délais.</p>
+<p>Veuillez traiter cette commande dans les plus brefs délais.</p>
 </body>
 </html>

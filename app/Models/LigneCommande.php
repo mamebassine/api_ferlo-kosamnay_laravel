@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+// app/Models/LigneCommande.php
 
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,9 +11,7 @@ class LigneCommande extends Model
 {
     use HasFactory;
 
-    // Définissez les attributs mass assignable
     protected $fillable = [
-        'produit_boutique_id',
         'user_id',
         'date',
         'statut',
@@ -20,17 +19,22 @@ class LigneCommande extends Model
         'prix_totale',
     ];
 
-    // Définissez la relation avec le modèle ProduitBoutique
-    // public function produit()
-    public function produitBoutique()
-
-    {
-        return $this->belongsTo(ProduitBoutique::class, 'produit_boutique_id');
-    }
-
-    // Définissez la relation avec le modèle User
+    // Relation avec le modèle User
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+        // Relation Many-to-Many avec ProduitBoutique via la table pivot "commande_produitboutique"
+
+  
+    public function produitBoutiques()
+    {
+        return $this->belongsToMany(ProduitBoutique::class, 'commandes', 'ligne_commande_id', 'produit_boutique_id')
+            ->withPivot('quantite', 'montant'); // Include any pivot table fields
+    }
+    public function produitBoutique()
+    {
+        return $this->belongsTo(ProduitBoutique::class, 'produit_boutique_id');
+    }
+    
 }
