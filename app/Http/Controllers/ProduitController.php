@@ -18,20 +18,14 @@ class ProduitController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+
             'categorie_id' => 'required|exists:categories,id',
-             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validation de l'image
+             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
 
-        //'nom' => 'required|string',
-             'nom' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
-        // 'description' => 'required|string',
-        //'description' => ['nullable', 'string', 'max:255', 'regex:/^[\p{L}\s]*$/u'],
+          'nom' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
         'description' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Zàâäéèêëîïôûù\s]*$/'],
+        'reference' =>['required','string','regex:/^[0-9]{3}[A-Za-z]{3}$/','unique:produits,reference'], 
 
-//  'nom_complet' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
-            //  'description' => ['nullable', 'string','max:255', 'regex:/^[a-zA-Z\s]*$/'],
-
-//'reference' => 'required|string|unique:produits,reference',
-            'reference' =>['required','string','regex:/^[0-9]{3}[A-Za-z]{3}$/','unique:produits,reference'], 
             'prix' => 'required|numeric',
             'quantite' => 'required|integer',
         ]);
@@ -63,47 +57,85 @@ class ProduitController extends Controller
         return response()->json($produit, 200);
     }
 
-
-
-
-
     public function update(Request $request, $id)
     {
-      
-        $produit = Produit::findOrFail($id);
-
+        $produit = Produit::findOrFail($id); // Cette ligne vérifie déjà si le produit existe
+        
+        // Validation des données
         $validatedData = $request->validate([
-            'categorie_id' => 'nullable|exists:categories,id',
-            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-
-            // 'image' => 'nullable|string',
-     // 'image' => 'required|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-     
-     'description' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Zàâäéèêëîïôûù\s]*$/'],
-     'prix' => 'nullable|numeric',
-            'quantite' => 'nullable|integer',
-            'reference' =>['required','string','regex:/^[0-9]{3}[A-Za-z]{3}$/','unique:produits,reference'], 
-            'nom' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
+         'nom' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
+         'reference' => ['required', 'string', 'regex:/^[0-9]{3}[A-Za-z]{3}$/', 'unique:produits,reference,' . $id],
+         'description' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Zàâäéèêëîïôûù\s]*$/'],
             
+        //     'categorie_id' => 'nullable|exists:categories,id',
+        // //     'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        //     'prix' => 'nullable|numeric',
+        //     'quantite' => 'nullable|integer',
         ]);
-        // Traitement de l'image si une nouvelle image est uploadée
+        
+        // Gestion de l'upload de l'image
         if ($request->hasFile('image')) {
-            // Supprimer l'ancienne image si elle existe
             if ($produit->image) {
                 Storage::disk('public')->delete($produit->image);
             }
-
-            // Sauvegarde la nouvelle image et met à jour le chemin
+            
             $imagePath = $request->file('image')->store('uploads', 'public');
             $validatedData['image'] = $imagePath;
         }
-
-        // Mise à jour du produit
-        $produit->update($validatedData);
-
-        return response()->json($produit->load('categorie', 'boutiques'), 200);
         
+        $produit->update($validatedData);
+    
+        return response()->json($produit->load('categorie', 'boutiques'), 200);
     }
+    
+
+
+
+
+
+
+
+
+
+    // public function update(Request $request, $id)
+    // {
+    //     $produit = Produit::findOrFail($id);
+    
+    //     // Validation rules
+    //     $validatedData = $request->validate([
+    //     'nom' => 'required|string',
+    //     'reference' => ['required', 'string', "unique:produits,reference,{$id}"],
+    //     'description' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Zàâäéèêëîïôûù\s]*$/'],
+
+
+
+
+    //    'categorie_id' => 'nullable|exists:categories,id',
+    //     'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+    //         'prix' => 'nullable|numeric',
+    //         'quantite' => 'nullable|integer',
+
+
+    //     ]);
+    
+    //     // Handle image upload
+    //     if ($request->hasFile('image')) {
+    //         // Delete old image if exists
+    //         if ($produit->image) {
+    //             Storage::disk('public')->delete($produit->image);
+    //         }
+    
+    //         // Store new image
+    //         $imagePath = $request->file('image')->store('uploads', 'public');
+    //         $validatedData['image'] = $imagePath;
+    //     }
+    
+    //     // Update the product
+    //     $produit->update($validatedData);
+    
+    //     return response()->json($produit->load('categorie', 'boutiques'), 200);
+    // }
+    
 
     
     

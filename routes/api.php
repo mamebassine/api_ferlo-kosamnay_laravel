@@ -20,6 +20,7 @@ use App\Http\Controllers\ProduitBoutiqueController;
 
 
 
+
 // les utilisateurs
     Route::apiResource('users', UserController::class);
 
@@ -57,15 +58,18 @@ Route::delete('categories/{categories}', [CategorieController::class, 'destroy']
 
 
 // Routes pour les produits
-// Route::apiResource('produits', ProduitController::class);
 
 Route::apiResource('produits', ProduitController::class);
 
-// Route::get('produits', [ProduitController::class, 'index']);
-// Route::post('/produits', [ProduitController::class, 'store']);
+Route::get('produits', [ProduitController::class, 'index']);
+Route::post('/produits', [ProduitController::class, 'store']);
+Route::post('produits/{id}', [ProduitController::class, 'update']);
+
+
+
 // Route::put('/produits/{id}', [ProduitController::class, 'update']);
-// Route::delete('produits/{id}', [ProduitController::class, 'destroy']);
-// Route::get('produits/{id}', [ProduitController::class, 'show']);
+Route::delete('produits/{id}', [ProduitController::class, 'destroy']);
+Route::get('produits/{id}', [ProduitController::class, 'show']);
 
 
 
@@ -106,9 +110,13 @@ Route::get('regions/{id}', [RegionController::class, 'show']);
 Route::put('regions/{id}', [RegionController::class, 'update']); 
 Route::delete('regions/{id}', [RegionController::class, 'destroy']); 
 
+// Route::apiResource('commandes', CommandeController::class);
 
+// Route::post('/commandes', [CommandeController::class, 'store']);
 
+    // Route::resource('commandes', CommandeController::class);
 
+    // Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
 
 
 
@@ -119,19 +127,19 @@ Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 // Route::apiResource('notifications', NotificationController::class);
   // Route::post('/notifications/{id}/mark-as-read', 'NotificationController@markAsRead');
     // Route::post('/notifications/mark-all-as-read', 'NotificationController@markAllAsRead');
-Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
+
+//Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
+
 //Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
 
-// Ou, pour une API
-Route::apiResource('commandes', CommandeController::class);
-Route::post('/commandes', [CommandeController::class, 'store']);
+
 
 Route::middleware('jwt.auth')->group(function () {
    Route::apiResource('lignes_commandes', LigneCommandeController::class);
 
 // Route::post('lignes_commandesk', [LigneCommandeController::class,'store']);
 
-Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
+
 Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
 
 // Route::middleware(['jwt.auth'])->group(function () {
@@ -171,6 +179,7 @@ Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerCon
 
 
 Route::middleware('auth:api')->group(function (): void {
+    
     Route::get('/paiements', [PaiementController::class, 'index']);
     Route::post('/paiements', [PaiementController::class, 'store']);
     Route::get('/paiements/{id}', [PaiementController::class, 'show']);
@@ -178,7 +187,14 @@ Route::middleware('auth:api')->group(function (): void {
     Route::delete('/paiements/{id}', [PaiementController::class, 'destroy']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
+
+     Route::get('listDeMescommandes', [CommandeController::class, 'mesCommandes']); 
+     
 });
+
+
+Route::get('listcommandes', [CommandeController::class, 'index']); 
+
 
 //Route::middleware('auth:api')->get('/notifications', [NotificationController::class, 'index']);
 
