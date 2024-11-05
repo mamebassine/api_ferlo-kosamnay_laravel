@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\Produit;
 use App\Models\Commande;
 use Illuminate\Http\Request;
 use App\Models\LigneCommande;
 use App\Models\ProduitBoutique;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -109,4 +111,45 @@ class CommandeController extends Controller
 
         return redirect()->route('commandes.index')->with('success', 'Commande supprimée avec succès.');
     }
+
+
+
+
+
+
+
+    public function produitPlusCommande()
+    {
+        // Compter le nombre de commandes par produit via la table pivot
+        $produit = ProduitBoutique::select('produit_id')
+            ->withCount(['ligneCommandes as total' => function ($query) {
+                $query->select(DB::raw('count(*)'));
+            }])
+            ->orderBy('total', 'desc')
+            ->first();
+    
+        // Vérifier si un produit a été trouvé
+        if (!$produit) {
+            return response()->json(['message' => 'Aucun produit trouvé'], 404);
+        }
+    
+        // Récupérer les détails du produit, en incluant le nom
+        $produitDetails = Produit::select('id', 'nom') // Sélectionnez uniquement les champs nécessaires
+            ->find($produit->produit_id);
+    
+        // Vérifier si le produit a été trouvé
+        if (!$produitDetails) {
+            return response()->json(['message' => 'Produit introuvable'], 404);
+        }
+    
+        return response()->json([
+            'produit' => [
+                // 'id' => $produitDetails->id,
+                'nom' => $produitDetails->nom
+            ],
+            // 'total_commandes' => $produit->total
+        ]);
+    }
+    
+
 }

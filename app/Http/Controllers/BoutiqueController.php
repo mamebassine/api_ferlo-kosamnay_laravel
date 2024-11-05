@@ -75,4 +75,12 @@ class BoutiqueController extends Controller
 
         return response()->json(['message' => 'Boutique supprimée avec succès'], 200);
     }
+
+
+    // Méthode pour obtenir le nombre total de boutiques
+public function nombreBoutiquesActuelles()
+{
+    $nombreBoutiques = Boutique::count();
+    return response()->json(['nombre_boutiques' => $nombreBoutiques], 200);
+}
 }

@@ -31,5 +31,6 @@ class ProduitBoutique extends Model
             ->withPivot('quantite', 'montant') // Champs supplémentaires dans la table pivot
             ->withTimestamps();
     }
+    
 }
 

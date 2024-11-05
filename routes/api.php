@@ -32,6 +32,9 @@ use App\Http\Controllers\ProduitBoutiqueController;
     
     Route::get('clients', [UserController::class, 'getClients']);
 
+    Route::get('nombre/total-representants', [UserController::class, 'getNombreTotalRepresentants']);
+
+
     // // // Route pour ajouter un représentant (accessible uniquement aux administrateurs)
     // Route::middleware(['admin'])->post('representants', [UserController::class, 'addRepresentant']);
 
@@ -64,12 +67,15 @@ Route::apiResource('produits', ProduitController::class);
 Route::get('produits', [ProduitController::class, 'index']);
 Route::post('/produits', [ProduitController::class, 'store']);
 Route::post('produits/{id}', [ProduitController::class, 'update']);
-
-
-
 // Route::put('/produits/{id}', [ProduitController::class, 'update']);
 Route::delete('produits/{id}', [ProduitController::class, 'destroy']);
 Route::get('produits/{id}', [ProduitController::class, 'show']);
+
+
+// Route::get('nombre/produits', [ProduitController::class, 'nombreProduits']);
+// Route::get('produits/le-plus-commande', [ProduitController::class, 'produitLePlusCommandé']);
+// Route::get('produits/disponibles', [ProduitController::class, 'produitsDisponibles']);
+// Route::get('stock_total', [ProduitController::class, 'produitsEnStock']);
 
 
 
@@ -97,6 +103,9 @@ Route::post('boutiques', [BoutiqueController::class, 'store']); // Crée une nou
 Route::get('boutiques/{id}', [BoutiqueController::class, 'show']); // Affiche une boutique spécifique
 Route::put('boutiques/{id}', [BoutiqueController::class, 'update']); // Met à jour une boutique
 Route::delete('boutiques/{id}', [BoutiqueController::class, 'destroy']); // Supprime une boutique
+
+
+Route::get('nombre/boutiques', [BoutiqueController::class, 'nombreBoutiquesActuelles']);
 
 //Route::apiResource('boutiques', controller: BoutiqueController::class);
 
@@ -136,7 +145,6 @@ Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 
 Route::middleware('jwt.auth')->group(function () {
    Route::apiResource('lignes_commandes', LigneCommandeController::class);
-
 // Route::post('lignes_commandesk', [LigneCommandeController::class,'store']);
 
 
@@ -194,6 +202,9 @@ Route::middleware('auth:api')->group(function (): void {
 
 
 Route::get('listcommandes', [CommandeController::class, 'index']); 
+
+Route::get('produit-plus-commande', [CommandeController::class, 'produitPlusCommande']);
+
 
 
 //Route::middleware('auth:api')->get('/notifications', [NotificationController::class, 'index']);

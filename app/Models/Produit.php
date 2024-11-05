@@ -34,8 +34,4 @@ class Produit extends Model
     public function produitBoutique(){
         return $this->hasMany(ProduitBoutique::class);
     }
-    public function ligneCommande()
-    {
-        return $this->belongsTo(LigneCommande::class, 'ligne_commande_id'); // Assurez-vous d'utiliser la bonne clé étrangère
-    }
 }

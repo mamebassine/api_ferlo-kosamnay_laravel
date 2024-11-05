@@ -48,4 +48,11 @@ class LigneCommande extends Model
     {
         return $this->belongsTo(Produit::class); // Assurez-vous que le modèle Produit existe
     }
+
+
+    public function produitBoutiquess()
+{
+    return $this->belongsToMany(ProduitBoutique::class, 'commandes', 'ligne_commande_id', 'produit_boutique_id');
+}
+
 }

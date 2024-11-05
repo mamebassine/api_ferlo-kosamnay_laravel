@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\User; 
 use Illuminate\Http\Request;  
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Tymon\JWTAuth\Facades\JWTAuth;  
+use App\Mail\RepresentantWelcomeMail;
 use Illuminate\Support\Facades\Hash;  
 use Illuminate\Support\Facades\Validator;  
-use Tymon\JWTAuth\Facades\JWTAuth;  
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Mail\RepresentantWelcomeMail;
-use Illuminate\Support\Facades\Mail;
 
 
 
@@ -240,5 +241,19 @@ public function getClients()
     $clients = User::where('role', 'client')->get();
     return response()->json($clients, 200);
 }
-    
+
+
+
+
+
+
+
+// Récupère le nombre de représentants 
+public function getNombreTotalRepresentants()
+{
+    // Compte le nombre total de représentants
+    $nombreRepresentants = User::where('role', 'representant')->count();
+return response()->json(['total_representants' => $nombreRepresentants], 200);
+}
+
 }

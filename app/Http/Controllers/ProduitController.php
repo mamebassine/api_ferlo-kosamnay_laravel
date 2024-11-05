@@ -23,7 +23,10 @@ class ProduitController extends Controller
              'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
 
           'nom' =>  ['required','string','max:14',  'regex:/^[a-zA-Z\s]*$/'],
-        'description' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Zàâäéèêëîïôûù\s]*$/'],
+          
+        // 'description' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]*$/'],
+        'description' => ['required', 'string', 'max:255', 'regex:/^[a-zA-ZÀ-ÿ\s]*$/'],
+
         'reference' =>['required','string','regex:/^[0-9]{3}[A-Za-z]{3}$/','unique:produits,reference'], 
 
             'prix' => 'required|numeric',
@@ -87,58 +90,7 @@ class ProduitController extends Controller
     
         return response()->json($produit->load('categorie', 'boutiques'), 200);
     }
-    
 
-
-
-
-
-
-
-
-
-    // public function update(Request $request, $id)
-    // {
-    //     $produit = Produit::findOrFail($id);
-    
-    //     // Validation rules
-    //     $validatedData = $request->validate([
-    //     'nom' => 'required|string',
-    //     'reference' => ['required', 'string', "unique:produits,reference,{$id}"],
-    //     'description' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Zàâäéèêëîïôûù\s]*$/'],
-
-
-
-
-    //    'categorie_id' => 'nullable|exists:categories,id',
-    //     'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-    //         'prix' => 'nullable|numeric',
-    //         'quantite' => 'nullable|integer',
-
-
-    //     ]);
-    
-    //     // Handle image upload
-    //     if ($request->hasFile('image')) {
-    //         // Delete old image if exists
-    //         if ($produit->image) {
-    //             Storage::disk('public')->delete($produit->image);
-    //         }
-    
-    //         // Store new image
-    //         $imagePath = $request->file('image')->store('uploads', 'public');
-    //         $validatedData['image'] = $imagePath;
-    //     }
-    
-    //     // Update the product
-    //     $produit->update($validatedData);
-    
-    //     return response()->json($produit->load('categorie', 'boutiques'), 200);
-    // }
-    
-
-    
-    
     // DELETE : Supprime un produit et son image
     public function destroy($id)
     {
@@ -158,6 +110,16 @@ class ProduitController extends Controller
             return response()->json(['message' => 'Erreur lors de la suppression'], 500);
         }
     }
+
+
+
+
+// Méthode pour obtenir le nombre total de produits
+        public function nombreProduits()
+        {
+            $nombreProduits = Produit::count();
+            return response()->json(['nombre_produits' => $nombreProduits], 200);
+        }
 }
 
 

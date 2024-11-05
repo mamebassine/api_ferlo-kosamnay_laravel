@@ -178,4 +178,9 @@ class LigneCommandeController extends Controller
 
         return response()->json($ligneCommande, 200);
     }
+
 }
+
+
+
+
