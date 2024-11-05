@@ -26,5 +26,8 @@ public function produitBoutique()
 {
     return $this->belongsTo(ProduitBoutique::class);
 }
-
+public function lignesCommande()
+{
+    return $this->hasMany(LigneCommande::class);
+}
 }

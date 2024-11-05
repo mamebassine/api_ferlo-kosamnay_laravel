@@ -20,12 +20,20 @@ use App\Http\Controllers\ProduitBoutiqueController;
 
 
 
+
 // les utilisateurs
     Route::apiResource('users', UserController::class);
 
     // Routes personnalisées pour récupérer les représentants et les clients
-    Route::post('representant', [UserController::class, 'addRepresentant']);
+
+    Route::get('representants', [UserController::class, 'getRepresentants']);
+
+    Route::post('representants', [UserController::class, 'addRepresentant']);
+    
     Route::get('clients', [UserController::class, 'getClients']);
+
+    Route::get('nombre/total-representants', [UserController::class, 'getNombreTotalRepresentants']);
+
 
     // // // Route pour ajouter un représentant (accessible uniquement aux administrateurs)
     // Route::middleware(['admin'])->post('representants', [UserController::class, 'addRepresentant']);
@@ -41,65 +49,106 @@ Route::post('login', [UserController::class, 'login'])->name('login');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 
-// Routes pour les catégories
+
+
+    // Routes pour les catégories
 Route::apiResource('categories', CategorieController::class);
+Route::post('categories/{categories}', [CategorieController::class, 'update']);
+Route::get('categories/{categories}', [CategorieController::class, 'show']);
+Route::get('categories/{categories}', [CategorieController::class, 'index']);
+Route::post('categories/{categories}', [CategorieController::class, 'store']);
+Route::delete('categories/{categories}', [CategorieController::class, 'destroy']);
+
 
 // Routes pour les produits
-// Route::apiResource('produits', ProduitController::class);
+
+Route::apiResource('produits', ProduitController::class);
 
 Route::get('produits', [ProduitController::class, 'index']);
-Route::post('produits', [ProduitController::class, 'store']);
-Route::post('produits/{produit}', [ProduitController::class, 'update']);
-Route::delete('produits/{produit}', [ProduitController::class, 'destroy']);
-Route::get('produits/{produit}', [ProduitController::class, 'show']);
+Route::post('/produits', [ProduitController::class, 'store']);
+Route::post('produits/{id}', [ProduitController::class, 'update']);
+// Route::put('/produits/{id}', [ProduitController::class, 'update']);
+Route::delete('produits/{id}', [ProduitController::class, 'destroy']);
+Route::get('produits/{id}', [ProduitController::class, 'show']);
+
+
+// Route::get('nombre/produits', [ProduitController::class, 'nombreProduits']);
+// Route::get('produits/le-plus-commande', [ProduitController::class, 'produitLePlusCommandé']);
+// Route::get('produits/disponibles', [ProduitController::class, 'produitsDisponibles']);
+// Route::get('stock_total', [ProduitController::class, 'produitsEnStock']);
+
+
+
+
+
+// Route::middleware('auth:api')->group(function (): void {
+
+// Routes pour les produits
+//Route::apiResource('produits', ProduitController::class);
+
+// Route::get('produits', [ProduitController::class, 'index']);
+
+// Route::post('produits', [ProduitController::class, 'store']);
+
+// Route::put('produits/{id}', [ProduitController::class, 'update']);
+// Route::delete('produits/{id}', [ProduitController::class, 'destroy']);
+// Route::get('produits/{id}', [ProduitController::class, 'show']);
+
 
 
 // Routes pour les boutiques
-Route::apiResource('boutiques', controller: BoutiqueController::class);
+Route::get('boutiques', [BoutiqueController::class, 'index']); // Liste toutes les boutiques
+Route::post('boutiques', [BoutiqueController::class, 'store']); // Crée une nouvelle boutique
+
+Route::get('boutiques/{id}', [BoutiqueController::class, 'show']); // Affiche une boutique spécifique
+Route::put('boutiques/{id}', [BoutiqueController::class, 'update']); // Met à jour une boutique
+Route::delete('boutiques/{id}', [BoutiqueController::class, 'destroy']); // Supprime une boutique
+
+
+Route::get('nombre/boutiques', [BoutiqueController::class, 'nombreBoutiquesActuelles']);
+
+//Route::apiResource('boutiques', controller: BoutiqueController::class);
+
 
 // Routes pour les adresse
-Route::apiResource('regions', controller: RegionController::class);
+// Route::apiResource('regions', RegionController::class);
+Route::get('regions', [RegionController::class, 'index']); 
+Route::post('regions', [RegionController::class, 'store']); 
+
+Route::get('regions/{id}', [RegionController::class, 'show']); 
+Route::put('regions/{id}', [RegionController::class, 'update']); 
+Route::delete('regions/{id}', [RegionController::class, 'destroy']); 
+
+// Route::apiResource('commandes', CommandeController::class);
+
+// Route::post('/commandes', [CommandeController::class, 'store']);
+
+    // Route::resource('commandes', CommandeController::class);
+
+    // Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
+
+
+
+
 Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 
-// Route::apiResource('notifications', NotificationController::class);
 
-    // Route::post('/notifications/{id}/mark-as-read', 'NotificationController@markAsRead');
+// Route::apiResource('notifications', NotificationController::class);
+  // Route::post('/notifications/{id}/mark-as-read', 'NotificationController@markAsRead');
     // Route::post('/notifications/mark-all-as-read', 'NotificationController@markAllAsRead');
 
-Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
+//Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
+
 //Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
-
-// 
-
-// Ou, pour une API
-Route::apiResource('commandes', CommandeController::class);
-Route::post('/commandes', [CommandeController::class, 'store']);
 
 
 
 Route::middleware('jwt.auth')->group(function () {
-   
-
- Route::apiResource('lignes_commandes', LigneCommandeController::class);
-
+   Route::apiResource('lignes_commandes', LigneCommandeController::class);
 // Route::post('lignes_commandesk', [LigneCommandeController::class,'store']);
 
 
-
-
-
-
-
-
-
-
-
-
-Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
 Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
-
-
-
 
 // Route::middleware(['jwt.auth'])->group(function () {
 //     Route::get('profile', [UserController::class, 'profile']);  
@@ -127,12 +176,8 @@ Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerCon
 // Route::post('/commandes/{id}/confirmation', [EmailController::class, 'envoyerConfirmationCommande']);
 // Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
 
-
 // });
 // Routes pour les paiements
-
-
-
 
 //Route::post('/paiement/initier/{ligneCommandeId}', [PaiementController::class, 'initierPaiement']);
 
@@ -141,7 +186,8 @@ Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerCon
 
 
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware('auth:api')->group(function (): void {
+    
     Route::get('/paiements', [PaiementController::class, 'index']);
     Route::post('/paiements', [PaiementController::class, 'store']);
     Route::get('/paiements/{id}', [PaiementController::class, 'show']);
@@ -149,7 +195,17 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/paiements/{id}', [PaiementController::class, 'destroy']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
+
+     Route::get('listDeMescommandes', [CommandeController::class, 'mesCommandes']); 
+     
 });
+
+
+Route::get('listcommandes', [CommandeController::class, 'index']); 
+
+Route::get('produit-plus-commande', [CommandeController::class, 'produitPlusCommande']);
+
+
 
 //Route::middleware('auth:api')->get('/notifications', [NotificationController::class, 'index']);
 

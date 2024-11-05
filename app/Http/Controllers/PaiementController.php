@@ -121,7 +121,7 @@ private function effectuerPaiement(array $transactionData)
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . env('NABOOPAY_API_KEY'),
+                'Authorization' => 'Bearer naboo-a88111eb-a5ac-42c6-a159-20a47a5c2cc6.dcde2a62-7f06-40b2-bef2-747638e734ec',
             ],
             'json' => $transactionData,
             
@@ -133,7 +133,7 @@ private function effectuerPaiement(array $transactionData)
 
     } catch (RequestException $e) {
         Log::error('Erreur lors de la création de la transaction:', ['error' => $e->getMessage()]);
-        return null;
+        return response()->json(['message' => 'trans' . $e->getMessage()], 500);
     }
 }
 

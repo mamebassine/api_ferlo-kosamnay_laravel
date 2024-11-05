@@ -8,11 +8,11 @@
 </head>
 <body>
     <h1>Nouvelle Commande Reçue</h1>
-    <p>Merci pour votre achat. Voici les détails de votre commande :</p>
+    <p>Merci pour votre achat. Voici les détails de la commande pour le client:</p>
    
     <ul>
         @foreach($ligneCommande->produitBoutiques as $produitBoutique)
-            <li><strong>Produit :</strong> {{ $produitBoutique->produit->nom ?? 'N/A' }}</li> <!-- Vérifie que le produit existe -->
+            <li><strong>Produit :</strong> {{ $produitBoutique->produit->nom ?? 'N/A' }}</li> 
             <li><strong>Quantité :</strong> {{ $produitBoutique->pivot->quantite }}</li>
             <li><strong>Prix Unitaire :</strong> {{ $produitBoutique->pivot->montant }} FCA</li>
         @endforeach

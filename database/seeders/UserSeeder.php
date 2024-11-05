@@ -24,6 +24,9 @@ class UserSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-       
+         // la commande que je dois lancer
+         
+        //    php artisan db:seed --class=UserSeeder
+
     }
 }

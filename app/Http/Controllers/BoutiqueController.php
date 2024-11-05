@@ -11,7 +11,6 @@ class BoutiqueController extends Controller
     // GET : Liste toutes les boutiques
     public function index()
     {
-        // return response()->json(Boutique::with('region', 'produits')->get(), 200);
         $boutiques = Boutique::with('region', 'produits', 'user')->get();
         return response()->json(['boutiques' => $boutiques], 200);
     }
@@ -19,18 +18,18 @@ class BoutiqueController extends Controller
     // POST : Crée une nouvelle boutique
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'nom' => 'required|string|max:255',
-            'adresse' => 'required|string',
-            'telephone' => 'required|string',
-            'region_id' => 'required|exists:regions,id',
-            'user_id' => 'nullable|exists:users,id',
 
+// Validation des données envoyées dans la requête
+        $validatedData = $request->validate([
+            'nom' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z\s]*$/'],
+            'adresse' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z\s]*$/'],
+            'telephone' => ['required', 'regex:/^\+?[0-9]{8,20}$/'], // Numéro avec 8 à 20 chiffres, peut inclure '+'
+            'region_id' => 'required|exists:regions,id', // Doit correspondre à un ID dans la table regions
+            'user_id' => 'nullable|exists:users,id', // Peut être null, sinon doit exister dans la table users
         ]);
 
+        // Création de la boutique
         $boutique = Boutique::create($validatedData);
-
-        // return response()->json($boutique, 201); 
 
         return response()->json([
             'message' => 'Boutique créée avec succès.',
@@ -41,9 +40,6 @@ class BoutiqueController extends Controller
     // GET : Affiche une boutique spécifique
     public function show($id)
     {
-        // $boutique = Boutique::with('adresse', 'produits')->findOrFail($id);
-        // return response()->json($boutique, 200);
-
         $boutique = Boutique::with('region', 'produits')->findOrFail($id);
         return response()->json(['boutique' => $boutique], 200);
     }
@@ -53,18 +49,17 @@ class BoutiqueController extends Controller
     {
         $boutique = Boutique::findOrFail($id);
 
+        // Validation des données pour la mise à jour
         $validatedData = $request->validate([
-            'nom' => 'nullable|string|max:255',
-            'adresse' => 'nullable|string',
-            'telephone' => 'nullable|string',
+            'nom' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z\s]*$/'],
+            'adresse' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z\s]*$/'],
+            'telephone' => ['required', 'regex:/^\+?[0-9]{8,20}$/'],
             'region_id' => 'nullable|exists:regions,id',
             'user_id' => 'nullable|exists:users,id',
-
         ]);
 
+        // Mise à jour de la boutique
         $boutique->update($validatedData);
-
-        // return response()->json($boutique, 200); // 200 OK
 
         return response()->json([
             'message' => 'Boutique mise à jour avec succès.',
@@ -78,8 +73,14 @@ class BoutiqueController extends Controller
         $boutique = Boutique::findOrFail($id);
         $boutique->delete();
 
-        // return response()->json(null, 204); // 204 No Content
-        return response()->json(['message' => 'Région supprimée avec succès']);
-
+        return response()->json(['message' => 'Boutique supprimée avec succès'], 200);
     }
+
+
+    // Méthode pour obtenir le nombre total de boutiques
+public function nombreBoutiquesActuelles()
+{
+    $nombreBoutiques = Boutique::count();
+    return response()->json(['nombre_boutiques' => $nombreBoutiques], 200);
+}
 }
