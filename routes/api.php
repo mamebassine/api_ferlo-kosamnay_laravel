@@ -71,11 +71,7 @@ Route::post('produits/{id}', [ProduitController::class, 'update']);
 Route::delete('produits/{id}', [ProduitController::class, 'destroy']);
 Route::get('produits/{id}', [ProduitController::class, 'show']);
 
-
-// Route::get('nombre/produits', [ProduitController::class, 'nombreProduits']);
-// Route::get('produits/le-plus-commande', [ProduitController::class, 'produitLePlusCommandé']);
-// Route::get('produits/disponibles', [ProduitController::class, 'produitsDisponibles']);
-// Route::get('stock_total', [ProduitController::class, 'produitsEnStock']);
+Route::get('nombre/produits', [ProduitController::class, 'nombreProduits']);
 
 
 
