@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProduitController extends Controller
@@ -120,6 +121,77 @@ class ProduitController extends Controller
             $nombreProduits = Produit::count();
             return response()->json(['nombre_produits' => $nombreProduits], 200);
         }
+
+//      public function nombreProduitsMois()
+// {
+//     // Regrouper les produits par mois et compter le nombre de produits pour chaque mois
+//     $nombreProduitsParMois = Produit::select(
+//             DB::raw('MONTH(created_at) as mois'), // Récupère le mois
+//             DB::raw('YEAR(created_at) as annee'), // Récupère l'année
+//             DB::raw('count(*) as nombre_produits') // Compte le nombre de produits pour chaque mois
+//         )
+//         ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)')) // Grouper par année et mois
+//         ->orderBy(DB::raw('YEAR(created_at)'), 'asc') // Trier par année (croissant)
+//         ->orderBy(DB::raw('MONTH(created_at)'), 'asc') // Trier par mois (croissant)
+//         ->get();
+
+//     // Retourner les données sous forme de tableau avec des noms de mois et les quantités
+//     $resultat = $nombreProduitsParMois->map(function ($item) {
+//         // Convertir le numéro du mois en nom de mois
+//         $mois = \Carbon\Carbon::createFromFormat('m', $item->mois)->format('F'); // Par exemple, 'January'
+//         return [
+//             'mois' => $mois,
+//             'produits' => $item->nombre_produits,
+//         ];
+//     });
+
+//     return response()->json(['nombre_produits' => $resultat], 200);
+// }
+
+
+
+
+
+public function nombreProduitsTemps()
+{
+    // Récupérer et grouper les produits par année, mois, semaine, jour et heure
+    $nombreProduitsParTemps = Produit::select(
+            DB::raw('YEAR(created_at) as annee'),          // Année
+            DB::raw('MONTH(created_at) as mois'),           // Mois
+            DB::raw('WEEK(created_at) as semaine'),         // Semaine
+            DB::raw('DAY(created_at) as jour'),             // Jour
+            DB::raw('HOUR(created_at) as heure'),           // Heure
+            DB::raw('count(*) as nombre_produits')          // Compte le nombre de produits
+        )
+        ->groupBy(
+            DB::raw('YEAR(created_at)'),
+            DB::raw('MONTH(created_at)'),
+            DB::raw('WEEK(created_at)'),
+            DB::raw('DAY(created_at)'),
+            DB::raw('HOUR(created_at)')
+        )
+        ->orderBy(DB::raw('YEAR(created_at)'), 'asc')
+        ->orderBy(DB::raw('MONTH(created_at)'), 'asc')
+        ->orderBy(DB::raw('WEEK(created_at)'), 'asc')
+        ->orderBy(DB::raw('DAY(created_at)'), 'asc')
+        ->orderBy(DB::raw('HOUR(created_at)'), 'asc')
+        ->get();
+
+    // Formater le résultat en ajoutant les noms de mois et structurer les données pour chaque intervalle de temps
+    $resultat = $nombreProduitsParTemps->map(function ($item) {
+        $mois = \Carbon\Carbon::createFromFormat('m', $item->mois)->format('F'); // Convertir le mois en nom de mois
+        return [
+            'annee' => $item->annee,
+            'mois' => $mois,
+            'semaine' => $item->semaine,
+            'jour' => $item->jour,
+            'heure' => $item->heure,
+            'produits' => $item->nombre_produits,
+        ];
+    });
+
+    return response()->json(['nombre_produits' => $resultat], 200);
+}
 }
 
 

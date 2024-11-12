@@ -25,13 +25,27 @@ class NotificationController extends Controller
 
     }
 
+    // public function markAsRead($id)
+    // {
+    //     $notification = Notification::findOrFail($id);
+    //     $notification->update(['lue' => true]); // Marquer comme lue
+        
+    //     return response()->json(['message' => 'Notification marquée comme lue']);
+    // }
+
     public function markAsRead($id)
     {
-        $notification = Notification::findOrFail($id);
-        $notification->update(['lue' => true]); // Marquer comme lue
-        
-        return response()->json(['message' => 'Notification marquée comme lue']);
+        $notification = Notification::find($id);
+        if ($notification) {
+            $notification->is_read = true;
+            $notification->save();
+            return response()->json(['status' => true, 'message' => 'Notification marquée comme lue.']);
+        }
+        return response()->json(['status' => false, 'message' => 'Notification non trouvée.'], 404);
     }
+    
+
+    
 
 
     // public function markAsRead($id)
