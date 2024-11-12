@@ -73,7 +73,9 @@ Route::get('produits/{id}', [ProduitController::class, 'show']);
 
 Route::get('nombre/produits', [ProduitController::class, 'nombreProduits']);
 
+// Route::get('nombre/produits/mois', [ProduitController::class, 'nombreProduitsTemps']);
 
+Route::get('nombre/produits/temps', [ProduitController::class, 'nombreProduitsTemps']);
 
 
 
@@ -125,6 +127,7 @@ Route::delete('regions/{id}', [RegionController::class, 'destroy']);
 
 
 
+    Route::put('produitBoutique/{id}', [ProduitBoutiqueController::class, 'update']);
 
 Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 
@@ -137,10 +140,36 @@ Route::apiResource('produitBoutique', ProduitBoutiqueController::class);
 
 //Route::post('/paiements/{id}/confirmation', [EmailController::class, 'envoyerConfirmationPaiement']);
 
+//STA STATUT
+
+// Route::get('statistiques/commandes', [LigneCommandeController::class, 'statistiques']);
+
+// Route pour les statistiques des commandes en attente
+Route::get('statistiques/commandes/en-attente', [LigneCommandeController::class, 'statistiquesEnAttente']);
+
+// Route pour les statistiques des commandes livrées
+Route::get('statistiques/commandes/livree', [LigneCommandeController::class, 'statistiquesLivree']);
+
+// Route pour les statistiques des commandes en cours de traitement
+Route::get('statistiques/commandes/en-cours-de-traitement', [LigneCommandeController::class, 'statistiquesEnCoursDeTraitement']);
+
+
+
+
+
+// Mettre à jour le statut d'une ligne de commande
+  Route::put('ligne/commandes/{id}/statut', [LigneCommandeController::class, 'updateStatut']);
+
+  //Route::patch('ligne/commandes/{id}/statut', [LigneCommandeController::class, 'updateStatut']);
+
+   // Récupérer toutes les lignes de commande, avec possibilité de filtrer par statut
+   Route::get('ligne/commande/filtre', [LigneCommandeController::class, 'index']);
 
 
 Route::middleware('jwt.auth')->group(function () {
    Route::apiResource('lignes_commandes', LigneCommandeController::class);
+
+
 // Route::post('lignes_commandesk', [LigneCommandeController::class,'store']);
 
 
@@ -191,6 +220,11 @@ Route::middleware('auth:api')->group(function (): void {
     Route::delete('/paiements/{id}', [PaiementController::class, 'destroy']);
 
     Route::get('/notifications', [NotificationController::class, 'index']);
+
+
+    //Route::put('/notifications/{id}/mark-read', [NotificationController::class, 'markAsRead']);
+    
+
 
      Route::get('listDeMescommandes', [CommandeController::class, 'mesCommandes']); 
      

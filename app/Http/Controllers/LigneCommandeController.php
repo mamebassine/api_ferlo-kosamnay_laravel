@@ -17,24 +17,45 @@ use App\Notifications\NotificationRepresentant;
 
 class LigneCommandeController extends Controller
 {
+
+
     /**
      * Affiche une liste des lignes de commande de l'utilisateur.
      */
-    public function index(Request $request)
-    {
-        // Vérifie si l'utilisateur est authentifié
-        if (!$request->user()) {
-            return response()->json(['error' => 'Utilisateur non authentifié'], 401);
-        }
+    // public function index(Request $request)
+    // {
+    //     // Vérifie si l'utilisateur est authentifié
+    //     if (!$request->user()) {
+    //         return response()->json(['error' => 'Utilisateur non authentifié'], 401);
+    //     }
 
-        // Récupère les lignes de commande associées à l'utilisateur
-        $user = $request->user();
-        $lignesCommandes = LigneCommande::where('user_id', $user->id)
-            ->with('ProduitBoutique') // Charge les produits associés via la relation many-to-many
+    //     // Récupère les lignes de commande associées à l'utilisateur
+    //     $user = $request->user();
+    //     $lignesCommandes = LigneCommande::where('user_id', $user->id)
+    //         ->with('ProduitBoutique') // Charge les produits associés via la relation many-to-many
+    //         ->get();
+
+    //     return response()->json($lignesCommandes);
+    // }
+
+
+    
+        /**
+         * Afficher la liste des commandes avec leurs statuts.
+         */
+        public function index(Request $request)
+        {
+            // On peut filtrer les commandes en fonction du statut si besoin
+            $statut = $request->query('statut');
+            
+            // On récupère les commandes avec un filtrage sur le statut si nécessaire
+            $lignesCommandes = LigneCommande::when($statut, function($query, $statut) {
+                return $query->where('statut', $statut);
+            })
             ->get();
-
-        return response()->json($lignesCommandes);
-    }
+    
+            return response()->json($lignesCommandes);
+        }
 
 
 
@@ -66,6 +87,8 @@ class LigneCommandeController extends Controller
                 // Crée une nouvelle ligne de commande unique
                 $ligneCommande = LigneCommande::create([
                     'user_id' => $userId,
+                    
+                    
                     'date' => $date,
                     'statut' => $statut,
                     'quantite_totale' => collect($request->input('produits'))->sum('quantite_totale'),
@@ -120,38 +143,125 @@ class LigneCommandeController extends Controller
     }
     
     
-    /**
-     * Met à jour une ligne de commande existante.
-     */
-    public function update(Request $request, $id)
-    {
-        // Valide les nouvelles valeurs
-        $request->validate([
-            'quantite_totale' => 'required|integer|min:1',
-            'prix_totale' => 'required|numeric'
-        ]);
+   
 
-        $ligneCommande = LigneCommande::find($id);
+/**
+     * Mettre à jour le statut d'une commande.
+     */public function updateStatut($id, Request $request)
+{
+    Log::info("Tentative de mise à jour du statut pour la commande ID : {$id}");
 
-        if (!$ligneCommande) {
-            return response()->json(['error' => 'Ligne de commande non trouvée.'], 404);
-        }
+    // Validation du champ statut
+    $request->validate([
+        'statut' => 'required|string' // assure que le statut est présent et de type chaîne
+    ]);
 
-        // Met à jour les informations de la ligne de commande
-        $ligneCommande->quantite_totale = $request->input('quantite_totale');
-        $ligneCommande->prix_totale = $request->input('prix_totale');
-        $ligneCommande->statut = $request->input('statut', $ligneCommande->statut);
+    $ligneCommande = LigneCommande::find($id);
+
+    if ($ligneCommande) {
+        $ligneCommande->statut = $request->input('statut');
         $ligneCommande->save();
 
-        if ($ligneCommande->statut === 'payée') {
-            Mail::to($request->user()->email)->send(new CommandePayee($ligneCommande));
-        }
+        Log::info("Statut mis à jour avec succès pour la commande ID : {$id}");
+        return response()->json(['message' => 'Statut mis à jour avec succès'], 200);
+    } else {
+        Log::error("Ligne de commande non trouvée pour l'ID : {$id}");
+        return response()->json(['message' => 'Ligne de commande non trouvée'], 404);
+    }
+}
 
-        return response()->json(['success' => 'Ligne de commande mise à jour avec succès.'], 200);
+    
+    
+
+public function update(Request $request, $id)
+    {
+     // Valide les nouvelles valeurs
+      $request->validate([
+         'quantite_totale' => 'required|integer|min:1',
+          'prix_totale' => 'required|numeric'
+      ]);
+
+ $ligneCommande = LigneCommande::find($id);
+
+      if (!$ligneCommande) {
+           return response()->json(['error' => 'Ligne de commande non trouvée.'], 404);
+      }
+
+     // Met à jour les informations de la ligne de commande
+ $ligneCommande->quantite_totale = $request->input('quantite_totale');
+     $ligneCommande->prix_totale = $request->input('prix_totale');
+     $ligneCommande->statut = $request->input('statut', $ligneCommande->statut);
+      $ligneCommande->save();
+
+     if ($ligneCommande->statut === 'payée') {
+          Mail::to($request->user()->email)->send(new CommandePayee($ligneCommande));
+      }
+
+    return response()->json(['success' => 'Ligne de commande mise à jour avec succès.'], 200);
+ }
+
+
+
+
+
+//  public function statistiques(Request $request)
+// {
+//     // On récupère les commandes et on les regroupe par statut
+//     $statistiques = LigneCommande::select('statut', DB::raw('count(*) as total'))
+//         ->groupBy('statut')
+//         ->get();
+
+//     // Renvoie les statistiques sous forme de réponse JSON
+//     return response()->json($statistiques);
+// }
+
+
+
+
+
+ /*Statistiques pour les commandes en attente*/
+    public function statistiquesEnAttente()
+    {
+        $statistiques = LigneCommande::where('statut', 'en attente')
+            ->count();
+
+        return response()->json([
+            'statut' => 'en attente',
+            'total' => $statistiques
+        ]);
     }
 
-    /**
-     * Supprime une ligne de commande spécifique.
+    /*Statistiques pour les commandes livrées.*/
+    public function statistiquesLivree()
+    {
+        $statistiques = LigneCommande::where('statut', 'livré')
+            ->count();
+
+        return response()->json([
+            'statut' => 'livré',
+            'total' => $statistiques
+        ]);
+    }
+
+    /*Statistiques pour les commandes en cours de traitement.*/
+    public function statistiquesEnCoursDeTraitement()
+    {
+        $statistiques = LigneCommande::where('statut', 'en cours de traitement')
+            ->count();
+
+        return response()->json([
+            'statut' => 'en cours de traitement',
+            'total' => $statistiques
+        ]);
+    }
+
+
+
+
+
+
+
+/*Supprime une ligne de commande spécifique.
      */
     public function destroy($id)
     {

@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;  
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-
-
-
 class UserController extends Controller
 {
         use AuthorizesRequests;  // Ajout du trait pour permettre l'autorisation

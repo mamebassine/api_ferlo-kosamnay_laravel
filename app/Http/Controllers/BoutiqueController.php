@@ -44,28 +44,48 @@ class BoutiqueController extends Controller
         return response()->json(['boutique' => $boutique], 200);
     }
 
-    // PUT/PATCH : Met à jour une boutique
+    // Met à jour une boutique
+
     public function update(Request $request, $id)
-    {
-        $boutique = Boutique::findOrFail($id);
+{
+    $validatedData = $request->validate([
+        // 'nom' => 'required|string|max:255',
+        // 'adresse' => 'required|string|max:255',
+        // 'telephone' => 'required|string|max:20',
+        // 'region_id' => 'required|exists:regions,id',
+        // 'user_id' => 'required|exists:users,id',
+        // 'representant' => 'nullable|string|max:255',
+    ]);
 
-        // Validation des données pour la mise à jour
-        $validatedData = $request->validate([
-            'nom' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z\s]*$/'],
-            'adresse' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z\s]*$/'],
-            'telephone' => ['required', 'regex:/^\+?[0-9]{8,20}$/'],
-            'region_id' => 'nullable|exists:regions,id',
-            'user_id' => 'nullable|exists:users,id',
-        ]);
+    $boutique = Boutique::findOrFail($id);
+    $boutique->update($validatedData);
 
-        // Mise à jour de la boutique
-        $boutique->update($validatedData);
+    return response()->json(['message' => 'Boutique mise à jour avec succès', 'boutique' => $boutique]);
+}
 
-        return response()->json([
-            'message' => 'Boutique mise à jour avec succès.',
-            'boutique' => $boutique
-        ], 200);
-    }
+
+
+    // public function update(Request $request, $id)
+    // {
+    //     $boutique = Boutique::findOrFail($id);
+
+    //     // Validation des données pour la mise à jour
+    //     $validatedData = $request->validate([
+    //         'nom' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z\s]*$/'],
+    //         'adresse' => ['required', 'string', 'max:15', 'regex:/^[a-zA-Z\s]*$/'],
+    //         'telephone' => ['required', 'regex:/^\+?[0-9]{8,20}$/'],
+    //         'region_id' => 'nullable|exists:regions,id',
+    //         'user_id' => 'nullable|exists:users,id',
+    //     ]);
+
+    //     // Mise à jour de la boutique
+    //     $boutique->update($validatedData);
+
+    //     return response()->json([
+    //         'message' => 'Boutique mise à jour avec succès.',
+    //         'boutique' => $boutique
+    //     ], 200);
+    // }
 
     // DELETE : Supprime une boutique
     public function destroy($id)
