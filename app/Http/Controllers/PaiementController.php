@@ -80,7 +80,7 @@ public function store(Request $request)
                     'description' => 'Paiement de la commande ID : ' . $commande->id,
                 ]
             ],
-            'success_url' => 'https://smartdevafrica.com',
+            'success_url' => 'https://ferlokosamnay.netlify.app/',
             'error_url' => 'https://smartdevafrica.com',
             'is_escrow' => false,
             'is_merchant' => false,
