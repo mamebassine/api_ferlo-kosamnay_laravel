@@ -20,6 +20,7 @@ use App\Http\Controllers\ProduitBoutiqueController;
 
 
 
+Route::get('users/{id}', [UserController::class, 'show']);
 
 // les utilisateurs
     Route::apiResource('users', UserController::class);
@@ -230,7 +231,11 @@ Route::middleware('auth:api')->group(function (): void {
      
 });
 
+// Route pour afficher les détails d'une commande spécifique
+Route::get('voirdetailcommandes/{id}', [CommandeController::class, 'show']);
 
+
+//Route::get('voirdetailcommandes/{id}', [CommandeController::class, 'show'])->name('commandes.show');
 Route::get('listcommandes', [CommandeController::class, 'index']); 
 
 Route::get('produit-plus-commande', [CommandeController::class, 'produitPlusCommande']);
