@@ -42,12 +42,6 @@ class CommandeController extends Controller
     
         return response()->json($commandes);
     }
-    
-    
-
-
-
-    
 // Afficher un formulaire pour créer une nouvelle commande
     public function create()
     {
@@ -71,12 +65,28 @@ class CommandeController extends Controller
         return redirect()->route('commandes.index')->with('success', 'Commande créée avec succès.');
     }
 
+    //$commandes = Commande::with('produitBoutique.produit','ligneCommande')->get();
+    //return response()->json($commandes);
+
     // Afficher les détails d'une commande
-    public function show($id)
-    {
-        $commande = Commande::with(['produitBoutique', 'ligneCommande'])->findOrFail($id);
-        return view('commandes.show', compact('commande'));
-    }
+    // public function show($id)
+    // {
+    //     $commande = Commande::with(['produitBoutique.produit', 'ligneCommande'])->findOrFail($id);
+    //     return response()->json($commande); 
+    // }
+    
+    // Afficher les détails d'une commande
+public function show($id)
+{
+    // Récupérer la commande avec les relations 'produitBoutique.produit', 'ligneCommande', et l'utilisateur
+    $commande = Commande::with(['produitBoutique.produit', 'ligneCommande.user'])->findOrFail($id);
+
+    // Pas nécessaire de "map" si on veut juste inclure l'utilisateur dans la réponse
+    return response()->json($commande); // Retourner la commande avec l'utilisateur lié
+}
+
+
+
 
     // Afficher un formulaire pour modifier une commande
     public function edit($id)

@@ -40,22 +40,30 @@ class LigneCommandeController extends Controller
 
 
     
-        /**
-         * Afficher la liste des commandes avec leurs statuts.
-         */
-        public function index(Request $request)
-        {
-            // On peut filtrer les commandes en fonction du statut si besoin
-            $statut = $request->query('statut');
-            
-            // On récupère les commandes avec un filtrage sur le statut si nécessaire
-            $lignesCommandes = LigneCommande::when($statut, function($query, $statut) {
+    public function index(Request $request)
+    {
+        // Filtrage en fonction du statut si besoin
+        $statut = $request->query('statut');
+        
+        // Récupère les lignes de commande avec les informations de l'utilisateur
+        $lignesCommandes = LigneCommande::when($statut, function($query, $statut) {
                 return $query->where('statut', $statut);
             })
+            ->with('user:id,nom_complet') // Charge les informations nécessaires de l'utilisateur
             ->get();
     
-            return response()->json($lignesCommandes);
-        }
+        // Ajoute le nom complet de l'utilisateur à chaque ligne de commande
+        $lignesCommandes->transform(function ($ligne) {
+            $ligne->nom_complet = $ligne->user->nom_complet ?? 'Nom non disponible';
+            unset($ligne->user); // Supprime l'objet `user` de la réponse JSON si nécessaire
+            return $ligne;
+        });
+    
+        return response()->json($lignesCommandes);
+    }
+    
+
+
 
 
 
