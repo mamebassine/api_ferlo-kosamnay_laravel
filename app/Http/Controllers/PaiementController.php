@@ -81,7 +81,7 @@ public function store(Request $request)
                 ]
             ],
             'success_url' => 'https://ferlokosamnay.netlify.app/',
-            'error_url' => 'https://smartdevafrica.com',
+            'error_url' => 'https://ferlokosamnay.netlify.app/',
             'is_escrow' => false,
             'is_merchant' => false,
         ];
